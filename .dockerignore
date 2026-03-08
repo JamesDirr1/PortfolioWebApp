@@ -1,0 +1,7 @@
+# .NET build folders
+src/API/bin/
+src/API/obj/
+
+
+.idea
+.env
