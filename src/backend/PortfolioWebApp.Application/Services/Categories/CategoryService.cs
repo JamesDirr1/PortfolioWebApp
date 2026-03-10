@@ -31,10 +31,7 @@ public class CategoryService : ICategoryService
     public async Task<CategoryDto?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
-        if (category is null)
-        {
-            return null;
-        }
+        if (category is null) return null;
 
         return new CategoryDto
         {
