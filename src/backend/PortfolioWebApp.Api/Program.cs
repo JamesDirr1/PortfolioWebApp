@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json;
+using PortfolioWebApp.Api.Logging;
 using PortfolioWebApp.Application.Interfaces.Categories;
 using PortfolioWebApp.Application.Services.Categories;
 using PortfolioWebApp.Domain.Interfaces;
@@ -8,20 +9,21 @@ using PortfolioWebApp.Infrastructure.Repositories;
 using PortfolioWebApp.Api.Middleware;
 using PortfolioWebApp.Api.Services;
 using PortfolioWebApp.Application.Interfaces;
+using Serilog;
+using Serilog.Events;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Logging.ClearProviders();
-builder.Logging.AddJsonConsole(options =>
-{
-    options.IncludeScopes = true;
-    options.TimestampFormat = "yyyy-MM-dd HH:mm:ss";
-    options.JsonWriterOptions = new JsonWriterOptions
-    {
-        Indented = true
-    };
-});
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .WriteTo.Console(new PortfolioJsonFormatter())
+    .CreateLogger();
+
+
+builder.Services.AddSerilog();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
