@@ -2,11 +2,12 @@
 using Microsoft.AspNetCore.Http;
 using Serilog.Context;
 
+
 namespace PortfolioWebApp.Api.Middleware;
 
 public sealed class RequestGuidMiddleware
 {
-    public const string RequestGuidHeaderName = "X-Request-Guid";
+    private string RequestGuidHeaderName = "X-Request-Guid";
     public const string RequestGuidItemKey = "RequestGuid";
 
     private readonly RequestDelegate _next;
@@ -41,7 +42,7 @@ public sealed class RequestGuidMiddleware
         using (LogContext.PushProperty("RequestGuid", requestGuid))
         using (LogContext.PushProperty("Method", context.Request.Method))
         using (LogContext.PushProperty("Path", context.Request.Path.ToString()))
-        using (LogContext.PushProperty("Host", context.Request.Host.ToString()))
+        using (LogContext.PushProperty("LogType", "RequestStart"))
         {
             _logger.LogInformation("Received request"); //Log for every request received 
             try
@@ -51,6 +52,7 @@ public sealed class RequestGuidMiddleware
                 //Push Response info to log context
                 using (LogContext.PushProperty("ElapsedMilliseconds", stopwatch.ElapsedMilliseconds))
                 using (LogContext.PushProperty("StatusCode", context.Response.StatusCode))
+                using (LogContext.PushProperty("LogType", "RequestCompleted"))
                 {
                     _logger.LogInformation("HTTP request completed"); //Log for each completed request
                 }
@@ -61,6 +63,7 @@ public sealed class RequestGuidMiddleware
                 //Push Response info to log context for exceptions 
                 using (LogContext.PushProperty("ElapsedMilliseconds", stopwatch.ElapsedMilliseconds))
                 using (LogContext.PushProperty("StatusCode", StatusCodes.Status500InternalServerError))
+                using (LogContext.PushProperty("LogType", "RequestCompleted"))
                 {
                     _logger.LogError(ex, "HTTP request failed"); //Log for each failed request
                 }

@@ -19,7 +19,12 @@ var builder = WebApplication.CreateBuilder(args);
 Log.Logger = new LoggerConfiguration()
     .ReadFrom.Configuration(builder.Configuration)
     .Enrich.FromLogContext()
-    .WriteTo.Console(new PortfolioJsonFormatter())
+    .WriteTo.Console(new PortfolioConsoleFormatter())
+    .WriteTo.File(
+        new PortfolioJsonFormatter(),
+        "logs/log-.log",
+        rollingInterval: RollingInterval.Day
+    )
     .CreateLogger();
 
 

@@ -45,7 +45,7 @@ public class CategoriesController : ControllerBase
 
         _logger.LogInformation("Returned category with id {id}", id);
         if (_logger.IsEnabled(LogLevel.Debug))
-            _logger.LogDebug("Category JSON: {CategoryJson}", JsonLogHelper.ToJson(category));
+            _logger.LogDebug("Category JSON: {CategoryJson:l}", JsonLogHelper.ToJson(category));
 
         return Ok(category);
     }
