@@ -1,6 +1,6 @@
 <Solution>
-  <Project Path="PortfolioWebApp.Api/PortfolioWebApp.Api.csproj" />
-  <Project Path="PortfolioWebApp.Application/PortfolioWebApp.Application.csproj" />
-  <Project Path="PortfolioWebApp.Domain/PortfolioWebApp.Domain.csproj" />
-  <Project Path="PortfolioWebApp.Infrastructure/PortfolioWebApp.Infrastructure.csproj" />
+    <Project Path="PortfolioWebApp.Api/PortfolioWebApp.Api.csproj"/>
+    <Project Path="PortfolioWebApp.Application/PortfolioWebApp.Application.csproj"/>
+    <Project Path="PortfolioWebApp.Domain/PortfolioWebApp.Domain.csproj"/>
+    <Project Path="PortfolioWebApp.Infrastructure/PortfolioWebApp.Infrastructure.csproj"/>
 </Solution>
