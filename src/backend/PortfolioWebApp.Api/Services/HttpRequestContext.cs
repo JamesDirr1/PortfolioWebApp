@@ -13,7 +13,7 @@ public sealed class HttpRequestContext : IRequestContext
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public string RequestGuid =>
-        _httpContextAccessor.HttpContext?.Items[RequestGuidMiddleware.RequestGuidItemKey]?.ToString()
-        ?? "no-request-guid";
+    public string RequestId =>
+        _httpContextAccessor.HttpContext?.Items[RequestGuidMiddleware.RequestIdItemKey]?.ToString()
+        ?? "no-request-id";
 }

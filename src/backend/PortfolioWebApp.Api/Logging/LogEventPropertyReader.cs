@@ -12,10 +12,7 @@ public static class LogEventPropertyReader
     /// </summary>
     public static string? GetString(LogEvent logEvent, string propertyName)
     {
-        if (!logEvent.Properties.TryGetValue(propertyName, out var value))
-        {
-            return null;
-        }
+        if (!logEvent.Properties.TryGetValue(propertyName, out var value)) return null;
 
         return value switch
         {
@@ -29,10 +26,7 @@ public static class LogEventPropertyReader
     /// </summary>
     public static int? GetInt(LogEvent logEvent, string propertyName)
     {
-        if (!logEvent.Properties.TryGetValue(propertyName, out var value))
-        {
-            return null;
-        }
+        if (!logEvent.Properties.TryGetValue(propertyName, out var value)) return null;
 
         return value switch
         {
@@ -42,14 +36,14 @@ public static class LogEventPropertyReader
             _ => null
         };
     }
-    
+
     /// <summary>
     /// Gets all request data from logEvent and converts to an object
     /// </summary>
     public static RequestLogData GetRequestData(LogEvent logEvent)
     {
         return new RequestLogData(
-            GetString(logEvent, "RequestGuid"),
+            GetString(logEvent, "Request-Id"),
             GetString(logEvent, "Method"),
             GetString(logEvent, "Path"),
             GetInt(logEvent, "StatusCode"),
