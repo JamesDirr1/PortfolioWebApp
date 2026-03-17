@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/" />
+  <Folder Name="/src/backend/">
+    <Project Path="src/backend/PortfolioWebApp.Api/PortfolioWebApp.Api.csproj" />
+    <Project Path="src/backend/PortfolioWebApp.Application/PortfolioWebApp.Application.csproj" />
+    <Project Path="src/backend/PortfolioWebApp.Domain/PortfolioWebApp.Domain.csproj" />
+    <Project Path="src/backend/PortfolioWebApp.Infrastructure/PortfolioWebApp.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PortfolioWebApp.Application.Tests/PortfolioWebApp.Application.Tests.csproj" />
+  </Folder>
+</Solution>

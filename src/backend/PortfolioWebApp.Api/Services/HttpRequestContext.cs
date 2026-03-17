@@ -16,4 +16,4 @@ public sealed class HttpRequestContext : IRequestContext
     public string RequestId =>
         _httpContextAccessor.HttpContext?.Items[RequestGuidMiddleware.RequestIdItemKey]?.ToString()
         ?? "no-request-id";
-}
+} 
