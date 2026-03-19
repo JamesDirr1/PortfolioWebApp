@@ -3,8 +3,12 @@
 on:
   push:
     branches:
+        - main
+        - version/*
   pull_request:
     branches:
+      - main
+      - version/*
 
 jobs:
   unit-tests:
