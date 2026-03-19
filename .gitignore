@@ -20,3 +20,11 @@ Thumbs.db
 
 # Docker volumes
 postgres_data
+
+# Log files
+logs/
+
+# Test results
+PortfolioWebApp.sln.DotSettings.user
+TestResults/
+coverage/

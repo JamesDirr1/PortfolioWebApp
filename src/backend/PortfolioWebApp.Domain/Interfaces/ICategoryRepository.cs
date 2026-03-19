@@ -1,4 +1,5 @@
 ﻿using PortfolioWebApp.Domain.Entities;
+
 namespace PortfolioWebApp.Domain.Interfaces;
 
 public interface ICategoryRepository

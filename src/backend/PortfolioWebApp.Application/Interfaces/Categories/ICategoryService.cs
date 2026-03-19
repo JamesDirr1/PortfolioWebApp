@@ -1,4 +1,5 @@
 ﻿using PortfolioWebApp.Application.DTOs.Categories;
+
 namespace PortfolioWebApp.Application.Interfaces.Categories;
 
 public interface ICategoryService

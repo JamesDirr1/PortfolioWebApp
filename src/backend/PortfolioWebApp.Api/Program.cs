@@ -1,34 +1,81 @@
 using Microsoft.EntityFrameworkCore;
+using PortfolioWebApp.Api.Logging;
 using PortfolioWebApp.Application.Interfaces.Categories;
 using PortfolioWebApp.Application.Services.Categories;
 using PortfolioWebApp.Domain.Interfaces;
 using PortfolioWebApp.Infrastructure.Data;
 using PortfolioWebApp.Infrastructure.Repositories;
-using static PortfolioWebApp.Domain.Interfaces.ICategoryRepository;
+using PortfolioWebApp.Api.Middleware;
+using PortfolioWebApp.Api.Services;
+using PortfolioWebApp.Application.Interfaces;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+// Creates logger that will be replaced once app starts
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<ICategoryService, CategoryService>();
-
-var app = builder.Build();
-
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseSwagger(); 
-    
-    app.UseSwaggerUI();
+    var builder = WebApplication.CreateBuilder(args);
+
+    builder.Host.UseSerilog((context, services, configuration) =>
+    {
+        configuration
+            .ReadFrom.Configuration(context.Configuration)
+            .ReadFrom.Services(services)
+            .Enrich.FromLogContext()
+            .WriteTo.Console(new PortfolioConsoleFormatter())
+            .WriteTo.File(new PortfolioJsonFormatter(),
+                "logs/log-.log",
+                rollingInterval: RollingInterval.Day
+            );
+    });
+
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+
+    builder.Services.AddHttpContextAccessor();
+    builder.Services.AddScoped<IRequestContext, HttpRequestContext>();
+
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+    builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+    builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+    var app = builder.Build();
+    app.Logger.LogInformation("Environment is {EnvironmentName}", app.Environment.EnvironmentName);
+
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    if (!app.Environment.IsDevelopment())
+    {
+        app.UseHttpsRedirection();
+    }
+
+    app.UseMiddleware<RequestContextLoggingMiddleware>();
+
+    app.UseAuthorization();
+    app.MapControllers();
+
+
+    app.Logger.LogInformation("Starting PortfolioWebApp API");
+
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-app.UseAuthorization();
-app.MapControllers();
-
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex, "PortfolioWebApp API failed to start");
+}
+finally
+{
+    Log.CloseAndFlush();
+}

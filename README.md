@@ -1,0 +1,1 @@
+[![.NET CI](https://github.com/JamesDirr1/PortfolioWebApp/actions/workflows/dotnet-test.yml/badge.svg)](https://github.com/JamesDirr1/PortfolioWebApp/actions/workflows/dotnet-test.yml)
