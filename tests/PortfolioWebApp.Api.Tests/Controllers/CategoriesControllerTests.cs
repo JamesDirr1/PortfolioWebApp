@@ -1,14 +1,12 @@
 ﻿using FluentAssertions;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using PortfolioWebApp.Api.Controllers;
 using PortfolioWebApp.Application.DTOs.Categories;
 using PortfolioWebApp.Application.Interfaces.Categories;
-using PortfolioWebApp.Domain.Entities;
 
-namespace PortfolioWebApp.Application.Tests.Controllers;
+namespace PortfolioWebApp.Api.Tests.Controllers;
 
 public class CategoriesControllerTests
 {

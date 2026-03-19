@@ -4,9 +4,9 @@ using Serilog.Context;
 
 namespace PortfolioWebApp.Api.Middleware;
 
-public sealed class RequestGuidMiddleware(
+public sealed class RequestContextLoggingMiddleware(
     RequestDelegate next,
-    ILogger<RequestGuidMiddleware> logger)
+    ILogger<RequestContextLoggingMiddleware> logger)
 {
     private const string RequestIdHeaderName = "Request-Id";
     public const string RequestIdItemKey = "RequestId";

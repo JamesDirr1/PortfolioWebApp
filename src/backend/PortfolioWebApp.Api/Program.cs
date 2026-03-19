@@ -58,10 +58,11 @@ try
 
     if (!app.Environment.IsDevelopment()) app.UseHttpsRedirection();
 
-    app.UseMiddleware<RequestGuidMiddleware>();
+    app.UseMiddleware<RequestContextLoggingMiddleware>();
 
     app.UseAuthorization();
     app.MapControllers();
+    
 
     app.Logger.LogInformation("Starting PortfolioWebApp API");
 

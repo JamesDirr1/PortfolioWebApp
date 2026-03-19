@@ -24,7 +24,7 @@ reportgenerator `
   -reports:"$testResultsDir\**\coverage.cobertura.xml" `
   -targetdir:$coverageDir `
   -reporttypes:Html `
-  -filefilters:"-**/obj/**;-**/Migrations/**"
+  -filefilters:"-**/obj/**;-**/Migrations/**;-**Program.cs"
 
 # Open report
 Write-Host "Done..." -ForegroundColor Cyan

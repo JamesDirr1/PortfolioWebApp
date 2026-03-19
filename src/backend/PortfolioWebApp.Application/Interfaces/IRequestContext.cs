@@ -2,5 +2,5 @@
 
 public interface IRequestContext
 {
-    string RequestId { get; }
+    string GetRequestId { get; }
 }
