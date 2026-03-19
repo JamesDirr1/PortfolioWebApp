@@ -49,7 +49,7 @@ jobs:
           reportgenerator \
             -reports:"tests/TestResults/**/coverage.cobertura.xml" \
             -targetdir:"tests/coverage-report" \
-            -reporttypes:"Html;MarkdownSummaryGithub"
+            -reporttypes:"Html;MarkdownSummaryGithub" \
             -filefilters:"-**/obj/**;-**/Program.cs;-**/Migrations/**"
 
       - name: Upload test results
