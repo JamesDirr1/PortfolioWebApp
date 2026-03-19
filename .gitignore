@@ -25,5 +25,6 @@ postgres_data
 logs/
 
 # Test results
+PortfolioWebApp.sln.DotSettings.user
 TestResults/
 coverage/

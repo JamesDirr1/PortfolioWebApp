@@ -23,7 +23,8 @@ Write-Host "Generating coverage report..." -ForegroundColor Cyan
 reportgenerator `
   -reports:"$testResultsDir\**\coverage.cobertura.xml" `
   -targetdir:$coverageDir `
-  -reporttypes:Html
+  -reporttypes:Html `
+  -filefilters:"-**/obj/**;-**/Migrations/**"
 
 # Open report
 Write-Host "Done..." -ForegroundColor Cyan
