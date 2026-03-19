@@ -26,7 +26,10 @@ public class CategoriesController : ControllerBase
         var categories = await _categoryService.GetAllAsync(cancellationToken);
         _logger.LogInformation("Returned {Count} categories", categories.Count());
         if (_logger.IsEnabled(LogLevel.Debug))
+        {
             _logger.LogDebug("Categories JSON: {CategoriesJson:l}", JsonLogHelper.ToJson(categories));
+        }
+
         return Ok(categories);
     }
 
@@ -44,7 +47,9 @@ public class CategoriesController : ControllerBase
 
         _logger.LogInformation("Returned category with id {id}", id);
         if (_logger.IsEnabled(LogLevel.Debug))
+        {
             _logger.LogDebug("Category JSON: {CategoryJson:l}", JsonLogHelper.ToJson(category));
+        }
 
         return Ok(category);
     }

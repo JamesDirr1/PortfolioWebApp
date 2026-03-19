@@ -18,7 +18,7 @@ public class CategoriesControllerTests
         //Arrange 
         var categories = new List<CategoryDto>
         {
-            new CategoryDto
+            new()
             {
                 Id = 1,
                 Title = "Test 1",
@@ -27,7 +27,7 @@ public class CategoriesControllerTests
                 DisplayOrder = 1,
                 IsActive = true
             },
-            new CategoryDto
+            new()
             {
                 Id = 2,
                 Title = "Test 2",
@@ -81,7 +81,7 @@ public class CategoriesControllerTests
         // Should return 200 okay and category of matching id
     {
         // Arrange 
-        var category = new CategoryDto()
+        var category = new CategoryDto
         {
             Id = 1,
             Title = "Test 1",

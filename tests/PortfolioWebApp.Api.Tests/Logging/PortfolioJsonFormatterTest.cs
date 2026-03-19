@@ -33,8 +33,8 @@ public class PortfolioJsonFormatterTest
         // Arrange
         var formatter = new PortfolioJsonFormatter();
         var logEvent = CreateLogEvent(
-            level: LogEventLevel.Information,
-            messageTemplate: "Hello, World!");
+            LogEventLevel.Information,
+            "Hello, World!");
         using var writer = new StringWriter();
         // Act
         formatter.Format(logEvent, writer);
@@ -52,8 +52,8 @@ public class PortfolioJsonFormatterTest
         // Arrange
         var formatter = new PortfolioJsonFormatter();
         var logEvent = CreateLogEvent(
-            level: LogEventLevel.Information,
-            messageTemplate: "Hello, World!",
+            LogEventLevel.Information,
+            "Hello, World!",
             properties: new Dictionary<string, LogEventPropertyValue>
             {
                 ["EventId"] = new ScalarValue(123),
@@ -98,7 +98,7 @@ public class PortfolioJsonFormatterTest
         // Assert
         using var json = JsonDocument.Parse(result);
         var root = json.RootElement;
-        
+
         root.TryGetProperty("Request", out var request).Should().BeTrue();
         request.GetProperty("Request-Id").GetString().Should().Be("request1234");
         request.GetProperty("Method").GetString().Should().Be("GET");
@@ -114,9 +114,9 @@ public class PortfolioJsonFormatterTest
         var formatter = new PortfolioJsonFormatter();
         var exception = new InvalidOperationException("Bad Request");
         var logEvent = CreateLogEvent(
-            level: LogEventLevel.Error,
-            messageTemplate: "Request failed",
-            exception: exception);
+            LogEventLevel.Error,
+            "Request failed",
+            exception);
         using var writer = new StringWriter();
         // Act
         formatter.Format(logEvent, writer);

@@ -16,7 +16,9 @@ public sealed class RequestContextLoggingMiddleware(
         string? incomingRequestId = null;
 
         if (context.Request.Headers.TryGetValue(RequestIdHeaderName, out var header))
+        {
             incomingRequestId = header.Count > 0 ? header[0] : null;
+        }
 
         //If no request guid is not provided create a new one
         var requestId = string.IsNullOrWhiteSpace(incomingRequestId)

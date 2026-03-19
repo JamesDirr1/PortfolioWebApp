@@ -23,6 +23,7 @@ public class JsonLogHelperTests
         result.Should().Contain("\"Name\": \"Test\"");
         result.Should().Contain("\n"); //NewLine = indented 
     }
+
     [Fact]
     public void ToJson_HandlesNulls()
         // Turns a null object to JSON
@@ -34,5 +35,4 @@ public class JsonLogHelperTests
         // Assert
         result.Should().Contain("null"); //NewLine = indented 
     }
-    
 }

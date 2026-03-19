@@ -17,7 +17,7 @@ public class CategoryServiceTests
         // Arrange
         var categories = new List<Category>
         {
-            new Category()
+            new()
             {
                 Id = 1,
                 Title = "Test Category 1",
@@ -26,7 +26,7 @@ public class CategoryServiceTests
                 IsActive = true,
                 Slug = "test-category-1"
             },
-            new Category()
+            new()
             {
                 Id = 2,
                 Title = "Test Category 2",

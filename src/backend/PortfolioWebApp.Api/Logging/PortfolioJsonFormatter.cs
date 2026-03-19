@@ -29,10 +29,14 @@ public sealed class PortfolioJsonFormatter : ITextFormatter
         AddIfPresent(request, "ElapsedMilliseconds", requestData.ElapsedMilliseconds);
 
         if (request.Count > 0) //Adds Request subsection to log messages if there is request information
+        {
             payload["Request"] = request;
+        }
 
-        if (logEvent.Exception is not null) //Adds Exception subsection to log message if an exception is town
+        if (logEvent.Exception is not null) //Adds Exception subsection to log message if an exception is thrown
+        {
             payload["Exception"] = logEvent.Exception.ToString();
+        }
 
         var json = JsonSerializer.Serialize(payload, JsonOptions);
         output.WriteLine(json);
@@ -43,6 +47,9 @@ public sealed class PortfolioJsonFormatter : ITextFormatter
     /// </summary>
     private static void AddIfPresent(IDictionary<string, object?> dictionary, string key, object? value)
     {
-        if (value is not null) dictionary[key] = value;
+        if (value is not null)
+        {
+            dictionary[key] = value;
+        }
     }
 }

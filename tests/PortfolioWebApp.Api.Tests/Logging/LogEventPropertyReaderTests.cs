@@ -15,7 +15,7 @@ public class LogEventPropertyReaderTests
         return new LogEvent(
             DateTimeOffset.UtcNow,
             LogEventLevel.Information,
-            exception: null,
+            null,
             new MessageTemplate("", Enumerable.Empty<MessageTemplateToken>()),
             properties.Select(kvp => new LogEventProperty(kvp.Key, kvp.Value)));
     }

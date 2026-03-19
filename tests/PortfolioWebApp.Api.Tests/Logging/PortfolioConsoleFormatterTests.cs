@@ -32,8 +32,8 @@ public class PortfolioConsoleFormatterTests
         // Arrange
         var formatter = new PortfolioConsoleFormatter();
         var logEvent = CreateLogEvent(
-            level: LogEventLevel.Information,
-            messageTemplate: "Hello, World!");
+            LogEventLevel.Information,
+            "Hello, World!");
         using var writer = new StringWriter();
         // Act
         formatter.Format(logEvent, writer);
@@ -108,7 +108,7 @@ public class PortfolioConsoleFormatterTests
             messageTemplate: "Received request",
             properties: new Dictionary<string, LogEventPropertyValue>
             {
-                ["Request-Id"] = new ScalarValue("request1234"),
+                ["Request-Id"] = new ScalarValue("request1234")
             });
         using var writer = new StringWriter();
         // Act
@@ -155,8 +155,8 @@ public class PortfolioConsoleFormatterTests
         // Arrange
         var formatter = new PortfolioConsoleFormatter();
         var logEvent = CreateLogEvent(
-            level: level,
-            messageTemplate: "Test");
+            level,
+            "Test");
         using var writer = new StringWriter();
         // Act
         formatter.Format(logEvent, writer);
