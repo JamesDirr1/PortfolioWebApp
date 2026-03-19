@@ -4,9 +4,9 @@ using Serilog.Context;
 
 namespace PortfolioWebApp.Api.Middleware;
 
-public sealed class RequestGuidMiddleware(
+public sealed class RequestContextLoggingMiddleware(
     RequestDelegate next,
-    ILogger<RequestGuidMiddleware> logger)
+    ILogger<RequestContextLoggingMiddleware> logger)
 {
     private const string RequestIdHeaderName = "Request-Id";
     public const string RequestIdItemKey = "RequestId";
@@ -16,7 +16,9 @@ public sealed class RequestGuidMiddleware(
         string? incomingRequestId = null;
 
         if (context.Request.Headers.TryGetValue(RequestIdHeaderName, out var header))
+        {
             incomingRequestId = header.Count > 0 ? header[0] : null;
+        }
 
         //If no request guid is not provided create a new one
         var requestId = string.IsNullOrWhiteSpace(incomingRequestId)

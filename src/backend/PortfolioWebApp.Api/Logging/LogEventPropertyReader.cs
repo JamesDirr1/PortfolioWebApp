@@ -12,7 +12,10 @@ public static class LogEventPropertyReader
     /// </summary>
     public static string? GetString(LogEvent logEvent, string propertyName)
     {
-        if (!logEvent.Properties.TryGetValue(propertyName, out var value)) return null;
+        if (!logEvent.Properties.TryGetValue(propertyName, out var value))
+        {
+            return null;
+        }
 
         return value switch
         {
@@ -26,7 +29,10 @@ public static class LogEventPropertyReader
     /// </summary>
     public static int? GetInt(LogEvent logEvent, string propertyName)
     {
-        if (!logEvent.Properties.TryGetValue(propertyName, out var value)) return null;
+        if (!logEvent.Properties.TryGetValue(propertyName, out var value))
+        {
+            return null;
+        }
 
         return value switch
         {

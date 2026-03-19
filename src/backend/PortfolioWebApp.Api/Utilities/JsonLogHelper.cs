@@ -9,7 +9,7 @@ public static class JsonLogHelper
         WriteIndented = true
     };
 
-    public static string ToJson(object obj)
+    public static string ToJson(object? obj)
     {
         return JsonSerializer.Serialize(obj, Options);
     }

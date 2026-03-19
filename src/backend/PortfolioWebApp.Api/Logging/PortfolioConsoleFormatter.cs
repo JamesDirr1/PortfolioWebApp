@@ -31,9 +31,15 @@ public sealed class PortfolioConsoleFormatter : ITextFormatter
                 break;
         }
 
-        if (!string.IsNullOrWhiteSpace(requestData.RequestId)) log += $"(req: {requestData.RequestId})";
+        if (!string.IsNullOrWhiteSpace(requestData.RequestId))
+        {
+            log += $"(req: {requestData.RequestId})";
+        }
 
-        if (logEvent.Exception is not null) log += $"{Environment.NewLine}{logEvent.Exception}";
+        if (logEvent.Exception is not null)
+        {
+            log += $"{Environment.NewLine}{logEvent.Exception}";
+        }
 
         output.WriteLine(log);
     }
