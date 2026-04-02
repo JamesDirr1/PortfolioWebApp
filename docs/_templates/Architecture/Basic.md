@@ -1,4 +1,4 @@
-[Docs](../index.md) / [Architecture](docs/index.md) / [{name}]({filename})
+[Docs](../index.md) / [Architecture](./index.md) / [{name}]({filename})
 
 # {name}
 ---
@@ -11,5 +11,5 @@ ___
 
 ___
 - [Back to top](#{name})
-- [Back to Architecture Documentation](docs/index.md)
+- [Back to Architecture Documentation](./index.md)
 - [Back to Docs Home](../index.md)

@@ -1,4 +1,4 @@
-[Docs](docs/index.md) / [changelog](index.md)
+[Docs](../index.md) / [changelog](index.md)
 
 # Changelog
 
@@ -16,4 +16,4 @@ This document tracks notable changes to the project across versions, including n
 ---
 
 - [Back to top](#changelog)
-- [Back to Docs Home](docs/index.md)
+- [Back to Docs Home](../index.md)

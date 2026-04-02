@@ -1,4 +1,4 @@
-[Docs](../../index.md) / [{name}](docs/_templates/General/index.md)
+[Docs](../../index.md) / [{name}](./index.md)
 
 # {name}
 ---

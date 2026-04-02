@@ -1,4 +1,4 @@
-[Docs](docs/index.md) / [Changelog](index.md) / [Version 0.1.0](version-0.1.0.md)
+[Docs](../index.md) / [Changelog](index.md) / [Version 0.1.0](version-0.1.0.md)
 
 # Version 0.1.0
 
@@ -41,5 +41,5 @@ Initial release of the project, including the core API, logging, testing, and do
 ---
 
 - [Back to top](#version010)
-- [Back to change log](index.md)
-- [Back to Docs Home](docs/index.md)
+- [Back to change log](./index.md)
+- [Back to Docs Home](../index.md)

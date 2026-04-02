@@ -1,4 +1,4 @@
-[Docs](../index.md) / [Architecture](docs/architecture/index.md) / [Request Flow](request-flow.md)
+[Docs](../index.md) / [Architecture](./index.md) / [Request Flow](request-flow.md)
 
 # Request Flow
 
@@ -79,5 +79,5 @@ This allows the middleware to:
 ---
 
 - [Back to top](#request-flow)
-- [Back to Architecture Documentation](docs/architecture/index.md)
+- [Back to Architecture Documentation](./index.md)
 - [Back to Docs Home](../index.md)

@@ -1,4 +1,4 @@
-[Docs](docs/index.md) / [Testing](docs/testing/index.md) / [CI](ci.md)
+[Docs](../index.md) / [Testing](./index.md) / [CI](ci.md)
 
 # Continuous Integration (CI)
 
@@ -111,5 +111,5 @@ Artifacts are retained for **7 days**.
 ---
 
 - [Back to top](#run-tests)
-- [Back to Testing](docs/testing/index.md)
-- [Back to Docs Home](docs/index.md)
+- [Back to Testing](./index.md)
+- [Back to Docs Home](../index.md)

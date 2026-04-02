@@ -1,4 +1,4 @@
-[Docs](../index.md) / [Architecture](docs/architecture/index.md) / [Design Decisions](decisions.md)
+[Docs](../index.md) / [Architecture](./index.md) / [Design Decisions](decisions.md)
 
 # Design Decisions
 
@@ -54,5 +54,5 @@ It also allows for better organization of code.
 ---
 
 - [Back to top](#design-decisions)
-- [Back to Architecture Documentation](docs/architecture/index.md)
-- [Back to Docs Home](docs/index.md)
+- [Back to Architecture Documentation](./index.md)
+- [Back to Docs Home](../index.md)

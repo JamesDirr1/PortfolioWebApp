@@ -1,4 +1,4 @@
-[Docs](../index.md) / [Architecture](docs/architecture/index.md) / [Data Access](data-access.md)
+[Docs](../index.md) / [Architecture](./index.md) / [Data Access](data-access.md)
 
 # Data Access
 
@@ -57,5 +57,5 @@ This allows:
 --- 
 
 - [Back to top](#data-access)
-- [Back to Architecture Documentation](docs/architecture/index.md)
+- [Back to Architecture Documentation](./index.md)
 - [Back to Docs Home](../index.md)

@@ -1,4 +1,4 @@
-[Docs](docs/index.md) / [Architecture](docs/architecture/index.md)
+[Docs](../index.md) / [Architecture](./index.md)
 
 # Application Architecture
 
@@ -31,4 +31,4 @@ The project currently focuses on:
 
 ---
 - [Back to top](#application-architecture)
-- [Back to Docs Home](docs/index.md)
+- [Back to Docs Home](../index.md)

@@ -1,4 +1,4 @@
-[Docs](docs/index.md) / [Future Plans](index.md)
+[Docs](../index.md) / [Future Plans](index.md)
 
 # Future Plans
 
@@ -86,4 +86,4 @@ Support a full portfolio experience:
 ---
 
 - [Back to top](#future plans)
-- [Back to Docs Home](docs/index.md)
+- [Back to Docs Home](../index.md)

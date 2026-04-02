@@ -1,4 +1,4 @@
-[Docs](docs/index.md) / [Testing](docs/testing/index.md) / [Run Tests](run-tests.md)
+[Docs](../index.md) / [Testing](./index.md) / [Run Tests](run-tests.md)
 
 # Run Tests
 
@@ -141,5 +141,5 @@ ___
 ---
 
 - [Back to top](#run-tests)
-- [Back to Testing](docs/testing/index.md)
-- [Back to Docs Home](docs/index.md)
+- [Back to Testing](./index.md)
+- [Back to Docs Home](../index.md)

@@ -1,4 +1,4 @@
-[Docs](docs/index.md) / [Setup](docs/setup/index.md)
+[Docs](../index.md) / [Setup](./index.md)
 
 # Setup
 
@@ -13,9 +13,9 @@ ___
 ## Contents
 
 - [Run Locally](local/index.md) - Setup and run the application on your local machine
-- [Production Deployment](prod/index.md) - Guide for deploying the application (planned)
+- Production Deployment - TODO (documentation pending)
 
 ---
 
 - [Back to top](#setup)
-- [Back to Docs Home](docs/index.md)
+- [Back to Docs Home](../index.md)

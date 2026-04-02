@@ -1,4 +1,4 @@
-[Docs](docs/index.md) / [setup](../index.md) / [Run Locally](docs/setup/local/index.md)
+[Docs](../../index.md) / [setup](../index.md) / [Run Locally](./index.md)
 
 # Run Locally
 

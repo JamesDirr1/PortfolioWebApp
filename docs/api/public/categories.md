@@ -1,4 +1,4 @@
-[Docs](../index.md) / [API](../index.md) / [Categories](categories.md)
+[Docs](../../index.md) / [API](../index.md) / [Categories](categories.md)
 
 # Categories API
 
@@ -29,8 +29,8 @@ If not provided, the server will generate a unique identifier and return it in t
 
 | Method | Endpoint             | Description                                       |
 |--------|----------------------|---------------------------------------------------|
-| GET    | /api/categories      | [GET all Categories](##GET`/api/categories`)      |
-| GET    | /api/categories/{id} | [GET category by ID](##GET`/api/categories/{id}`) |
+| GET    | /api/categories      | [GET all Categories](#get-apicategories)      |
+| GET    | /api/categories/{id} | [GET category by ID](#get-apicategoriesid) |
 
 ---
 

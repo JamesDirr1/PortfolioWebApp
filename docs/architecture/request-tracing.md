@@ -1,4 +1,4 @@
-[Docs](../index.md) / [Architecture](docs/architecture/index.md) / [Request Tracing](request-tracing.md)
+[Docs](../index.md) / [Architecture](./index.md) / [Request Tracing](request-tracing.md)
 
 # Request Tracing
 
@@ -77,5 +77,5 @@ Request tracing improves:
 ---
 
 - [Back to top](#request-tracing)
-- [Back to Architecture Documentation](docs/architecture/index.md)
+- [Back to Architecture Documentation](./index.md)
 - [Back to Docs Home](../index.md)

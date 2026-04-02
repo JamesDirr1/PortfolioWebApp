@@ -1,4 +1,4 @@
-[Docs](../index.md) / [API](../index.md) / [{End Point}]({endpoint}.md)
+[Docs](../index.md) / [API](./index.md) / [{End Point}]({endpoint}.md)
 
 # {End Point} API
 ---
@@ -34,5 +34,5 @@ If not provided, the server will generate a unique identifier and return it in t
 {End points here }
 
 - [Back to Endpoints](#endpoints)
-- [Back to API Documentation](../index.md)
+- [Back to API Documentation](./index.md)
 - [Back to Docs Home](../../index.md)

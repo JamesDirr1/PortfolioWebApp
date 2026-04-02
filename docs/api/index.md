@@ -1,4 +1,4 @@
-[Docs](../index.md) / [API](docs/api/index.md)
+[Docs](../index.md) / [API](./index.md)
 
 # API Documentation
 
@@ -35,8 +35,8 @@ http://localhost:5018
 
 ## Future API Endpoints
 
-- [Projects](projects.md)
-- [Images](images.md)
+- Projects - TODO (documentation pending)
+- Images - TODO (documentation pending)
 
 ---
 

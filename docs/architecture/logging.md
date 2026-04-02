@@ -1,4 +1,4 @@
-[Docs](../index.md) / [Architecture](docs/architecture/index.md) / [Logging](logging.md)
+[Docs](../index.md) / [Architecture](./index.md) / [Logging](logging.md)
 
 # Logging
 
@@ -109,5 +109,5 @@ This log format includes:
 
 ___
 - [Back to top](#Logging)
-- [Back to Architecture Documentation](docs/architecture/index.md)
+- [Back to Architecture Documentation](./index.md)
 - [Back to Docs Home](../index.md)
