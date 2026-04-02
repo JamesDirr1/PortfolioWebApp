@@ -13,6 +13,8 @@ instructions, testing, and future plans.
 
 - [API](api/index.md) – Endpoint documentation, request/response examples, and usage details
 - [Architecture](architecture/index.md) – Project structure, request flow, data access, and design decisions
+- [Standards](standards/index.md) – Development standards, including Git branching strategy and commit message
+  conventions
 - [Setup](setup/index.md) – Guides for running and configuring the application locally and in production
 - [Testing](testing/index.md) – Testing strategy, running tests, coverage, and CI integration
 - [Future Plans](future-plans/index.md) – Planned features, improvements, and roadmap

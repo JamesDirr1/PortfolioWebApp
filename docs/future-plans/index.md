@@ -1,4 +1,4 @@
-[Docs](../index.md) / [Future Plans](index.md)
+[Docs](../index.md) / [Future Plans](./index.md)
 
 # Future Plans
 
