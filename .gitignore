@@ -8,6 +8,9 @@ obj/
 # Visual Studio
 .vs/
 
+# Obsidian
+.obsidian/
+
 # Node
 node_modules/
 
