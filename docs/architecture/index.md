@@ -1,10 +1,8 @@
-﻿[Docs](../../index.md) / [Architecture](index.md)
+[Docs](docs/index.md) / [Architecture](docs/architecture/index.md)
 
 # Application Architecture
 
 ---
-
-## Overview
 
 This application is a backend API built using **ASP.NET Core Web API**, **Entity Framework Core**, and **PostgreSQL**.
 
@@ -29,7 +27,8 @@ The project currently focuses on:
 - [Design Decisions](decisions.md) – Key architectural choices and reasoning
 - [Data Access](data-access.md) – Database and EF Core usage
 - [Request Tracing](request-tracing.md) – Request ID handling and observability
+- [Logging](logging.md) - Structure of logging
 
 ---
-
-- [Back to Docs Home](../../index.md)
+- [Back to top](#application-architecture)
+- [Back to Docs Home](docs/index.md)

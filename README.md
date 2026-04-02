@@ -27,6 +27,8 @@ Full documentation is available here:
 
 - [Docs Home](docs/index.md)
 
+--- 
+
 ## Tech Stack
 
 - **Backend:** ASP.NET Core Web API

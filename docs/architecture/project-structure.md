@@ -1,4 +1,4 @@
-﻿[Docs](../index.md) / [Architecture](index.md) / [Project Structure](project-structure.md)
+[Docs](../index.md) / [Architecture](docs/architecture/index.md) / [Project Structure](project-structure.md)
 
 # Project Structure
 
@@ -22,7 +22,7 @@ src/backend/
 
 ---
 
-# API Layer `PortfolioWebApp.Api`
+## API Layer `PortfolioWebApp.Api`
 
 Responsible for handling HTTP requests and responses.
 
@@ -77,5 +77,5 @@ Key responsibilities:
 ---
 
 - [Back to Layers](#project-structure)
-- [Back to Architecture Documentation](index.md)
+- [Back to Architecture Documentation](docs/architecture/index.md)
 - [Back to Docs Home](../index.md)

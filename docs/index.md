@@ -1,19 +1,24 @@
-﻿[Docs](index.md)
+[Docs](index.md)
+
 # Documentation
 
 ---
 
-This is the documentation for the project. It includes information about the project's features, installation instructions, usage guidelines, and more.
+This section contains documentation for the Portfolio Web App, including API endpoints, architecture, setup
+instructions, testing, and future plans.
+
+---
 
 ## Contents
-- [API](api/index.md)
-- [Architecture](architecture/index.md)
-- [Setup](setup.md) - TODO: Add setup instructions
-- [Testing](testing.md) -TODO: Add testing instructions
-- [Future Plans](future_plans.md) -TODO: Add future plans and roadmap
-- [Changelog](changelog.md) -TODO: Add changelog for project updates and version history
+
+- [API](api/index.md) – Endpoint documentation, request/response examples, and usage details
+- [Architecture](architecture/index.md) – Project structure, request flow, data access, and design decisions
+- [Setup](setup/index.md) – Guides for running and configuring the application locally and in production
+- [Testing](testing/index.md) – Testing strategy, running tests, coverage, and CI integration
+- [Future Plans](future-plans/index.md) – Planned features, improvements, and roadmap
+- [Changelog](changelog/index.md) – Version history and notable project updates
 
 ---
 
 - [Back to top](#documentation)
-
+- [Back to README](../README.md)
