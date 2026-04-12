@@ -1,54 +1,54 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PortfolioWebApp.Api.Utilities;
 using PortfolioWebApp.Application.Interfaces.Categories;
-
+using PortfolioWebApp.Application.DTOs.Categories;
+using PortfolioWebApp.Domain.Queries;
 
 namespace PortfolioWebApp.Api.Controllers;
 
-[ApiController]
-[Route("api/[controller]")]
-public class CategoriesController : ControllerBase
+[ApiController, Route("api/categories")]
+public class CategoriesController(
+    ICategoryService categoryService,
+    ILogger<CategoriesController> logger)
+    : ControllerBase
 {
-    private readonly ICategoryService _categoryService;
-    private readonly ILogger<CategoriesController> _logger;
-
-    public CategoriesController(ICategoryService categoryService,
-        ILogger<CategoriesController> logger)
-    {
-        _categoryService = categoryService;
-        _logger = logger;
-    }
-
     [HttpGet]
-    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetAll(
+        [FromQuery] CategoryQueryParameters query,
+        CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Getting all categories");
-        var categories = await _categoryService.GetAllAsync(cancellationToken);
-        _logger.LogInformation("Returned {Count} categories", categories.Count());
-        if (_logger.IsEnabled(LogLevel.Debug))
+        logger.LogInformation(
+            "Getting categories with Title={Title}, SortBy={SortBy}, SortDirection={SortDirection}, Page={Page}, PageSize={PageSize}",
+            query.Title,
+            query.SortBy,
+            query.SortDirection,
+            query.Page,
+            query.PageSize);
+        var categories = await categoryService.GetAllAsync(query, cancellationToken);
+        logger.LogInformation("Returned {Count} categories", categories.Count());
+        if (logger.IsEnabled(LogLevel.Debug))
         {
-            _logger.LogDebug("Categories JSON: {CategoriesJson:l}", JsonLogHelper.ToJson(categories));
+            logger.LogDebug("Categories JSON: {CategoriesJson:l}", JsonLogHelper.ToJson(categories));
         }
-
         return Ok(categories);
     }
 
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Getting category with id {id}", id);
-        var category = await _categoryService.GetByIdAsync(id, cancellationToken);
+        logger.LogInformation("Getting category with id {id}", id);
+        var category = await categoryService.GetByIdAsync(id, cancellationToken);
 
         if (category is null)
         {
-            _logger.LogWarning("Category with id {id} not found", id);
+            logger.LogWarning("Category with id {id} not found", id);
             return NotFound(new { message = "Category not found" });
         }
 
-        _logger.LogInformation("Returned category with id {id}", id);
-        if (_logger.IsEnabled(LogLevel.Debug))
+        logger.LogInformation("Returned category with id {id}", id);
+        if (logger.IsEnabled(LogLevel.Debug))
         {
-            _logger.LogDebug("Category JSON: {CategoryJson:l}", JsonLogHelper.ToJson(category));
+            logger.LogDebug("Category JSON: {CategoryJson:l}", JsonLogHelper.ToJson(category));
         }
 
         return Ok(category);

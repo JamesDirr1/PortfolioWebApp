@@ -1,21 +1,15 @@
 ﻿using PortfolioWebApp.Application.DTOs.Categories;
 using PortfolioWebApp.Application.Interfaces.Categories;
 using PortfolioWebApp.Domain.Interfaces;
+using PortfolioWebApp.Domain.Queries;
 
 namespace PortfolioWebApp.Application.Services.Categories;
 
-public class CategoryService : ICategoryService
+public class CategoryService(ICategoryRepository categoryRepository) : ICategoryService
 {
-    private readonly ICategoryRepository _categoryRepository;
-
-    public CategoryService(ICategoryRepository categoryRepository)
+    public async Task<List<CategoryDto>> GetAllAsync(CategoryQueryParameters query, CancellationToken cancellationToken = default)
     {
-        _categoryRepository = categoryRepository;
-    }
-
-    public async Task<List<CategoryDto>> GetAllAsync(CancellationToken cancellationToken = default)
-    {
-        var categories = await _categoryRepository.GetAllAsync(cancellationToken);
+        var categories = await categoryRepository.GetAllAsync(query, cancellationToken);
 
         return categories.Select(category => new CategoryDto
         {
@@ -24,13 +18,13 @@ public class CategoryService : ICategoryService
             Slug = category.Slug,
             DisplayOrder = category.DisplayOrder,
             Description = category.Description,
-            IsActive = category.IsActive
         }).ToList();
+        
     }
 
     public async Task<CategoryDto?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
+        var category = await categoryRepository.GetByIdAsync(id, cancellationToken);
         if (category is null)
         {
             return null;
