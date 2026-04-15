@@ -1,10 +1,13 @@
-﻿using PortfolioWebApp.Application.DTOs.Categories;
-using PortfolioWebApp.Domain.Queries;
+﻿using PortfolioWebApp.Application.Common;
+using PortfolioWebApp.Application.DTOs.Categories;
+using PortfolioWebApp.Application.QueryParameters;
 
 namespace PortfolioWebApp.Application.Interfaces.Categories;
 
 public interface ICategoryService
 {
-    Task<List<CategoryDto>> GetAllAsync(CategoryQueryParameters query, CancellationToken cancellationToken = default);
+    Task<PagedResponse<CategoryDto>> GetAllAsync(CategoryQueryParameters query,
+        CancellationToken cancellationToken = default);
+
     Task<CategoryDto?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
 }

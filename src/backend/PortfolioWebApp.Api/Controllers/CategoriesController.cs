@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using PortfolioWebApp.Api.Responses;
 using PortfolioWebApp.Api.Utilities;
+using PortfolioWebApp.Application.Common;
 using PortfolioWebApp.Application.Interfaces.Categories;
 using PortfolioWebApp.Application.DTOs.Categories;
-using PortfolioWebApp.Domain.Queries;
+using PortfolioWebApp.Application.QueryParameters;
 
 namespace PortfolioWebApp.Api.Controllers;
 
@@ -10,10 +12,13 @@ namespace PortfolioWebApp.Api.Controllers;
 public class CategoriesController(
     ICategoryService categoryService,
     ILogger<CategoriesController> logger)
-    : ControllerBase
+    : ApiControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll(
+    [ProducesResponseType(typeof(ApiResponse<PagedResponse<CategoryDto>>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiValidationResponse), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ApiResponse<PagedResponse<CategoryDto>>>> GetAll(
         [FromQuery] CategoryQueryParameters query,
         CancellationToken cancellationToken)
     {
@@ -24,13 +29,19 @@ public class CategoriesController(
             query.SortDirection,
             query.Page,
             query.PageSize);
-        var categories = await categoryService.GetAllAsync(query, cancellationToken);
-        logger.LogInformation("Returned {Count} categories", categories.Count());
+
+        var pagedResponse = await categoryService.GetAllAsync(query, cancellationToken);
+
+        logger.LogInformation("Returned {Count} categories out of {TotalCount}", pagedResponse.Items.Count,
+            pagedResponse.MetaData.TotalCount);
         if (logger.IsEnabled(LogLevel.Debug))
         {
-            logger.LogDebug("Categories JSON: {CategoriesJson:l}", JsonLogHelper.ToJson(categories));
+            logger.LogDebug("Categories JSON: {CategoriesJson:l}", JsonLogHelper.ToJson(pagedResponse.Items));
         }
-        return Ok(categories);
+
+        return Success(pagedResponse, pagedResponse.Items.Count == 0
+            ? "No categories found."
+            : "Categories retrieved successfully.");
     }
 
     [HttpGet("{id:int}")]
