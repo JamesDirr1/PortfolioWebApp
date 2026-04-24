@@ -3,8 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using PortfolioWebApp.Api.Controllers;
+using PortfolioWebApp.Api.Responses;
+using PortfolioWebApp.Application.Common;
 using PortfolioWebApp.Application.DTOs.Categories;
 using PortfolioWebApp.Application.Interfaces.Categories;
+using PortfolioWebApp.Application.QueryParameters;
 
 namespace PortfolioWebApp.Api.Tests.Controllers;
 
@@ -37,20 +40,39 @@ public class CategoriesControllerTests
                 IsActive = false
             }
         };
+
+        var pagedResponse = PagedResponse<CategoryDto>.Create(
+            categories,
+            page: 1,
+            pageSize: 10,
+            totalCount: 2);
+
         var serviceMock = new Mock<ICategoryService>();
         serviceMock
-            .Setup(x => x.GetAllAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(categories);
+            .Setup(x => x.GetAllAsync(It.IsAny<CategoryQueryParameters>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(pagedResponse);
         var loggerMock = new Mock<ILogger<CategoriesController>>();
         var controller = new CategoriesController(serviceMock.Object, loggerMock.Object);
+        var query = new CategoryQueryParameters();
         //Act
-        var result = await controller.GetAll(CancellationToken.None);
+        var result = await controller.GetAll(query, CancellationToken.None);
         //Assert 
-        var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+        var okResult = result.Result.Should().BeOfType<OkObjectResult>().Subject;
         okResult.StatusCode.Should().Be(200);
-        var value = ((IEnumerable<CategoryDto>)okResult.Value!).ToList();
-        value.Should().HaveCount(2);
-        value.Should().Equal(categories);
+        var response = okResult.Value
+            .Should()
+            .BeOfType<ApiResponse<PagedResponse<CategoryDto>>>()
+            .Subject;
+        response.Success.Should().BeTrue();
+        response.Message.Should().Be("Categories retrieved successfully.");
+
+        response.Data.Should().NotBeNull();
+        response.Data!.Items.Should().HaveCount(2);
+        response.Data.Items.Should().BeEquivalentTo(categories);
+
+        response.Data.MetaData.Page.Should().Be(1);
+        response.Data.MetaData.PageSize.Should().Be(10);
+        response.Data.MetaData.TotalCount.Should().Be(2);
     }
 
     [Fact]
@@ -60,19 +82,37 @@ public class CategoriesControllerTests
     {
         // Arrange
         var categories = new List<CategoryDto>();
+        var pagedResponse = PagedResponse<CategoryDto>.Create(
+            categories,
+            page: 1,
+            pageSize: 10,
+            totalCount: 0);
         var serviceMock = new Mock<ICategoryService>();
         serviceMock
-            .Setup(x => x.GetAllAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(categories);
+            .Setup(x => x.GetAllAsync(It.IsAny<CategoryQueryParameters>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(pagedResponse);
         var loggerMock = new Mock<ILogger<CategoriesController>>();
         var controller = new CategoriesController(serviceMock.Object, loggerMock.Object);
+        var query = new CategoryQueryParameters();
         // Act
-        var result = await controller.GetAll(CancellationToken.None);
+        var result = await controller.GetAll(query, CancellationToken.None);
         // Assert
-        var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+        var okResult = result.Result.Should().BeOfType<OkObjectResult>().Subject;
         okResult.StatusCode.Should().Be(200);
-        var value = ((IEnumerable<CategoryDto>)okResult.Value!).ToList();
-        value.Should().BeEmpty();
+        var response = okResult.Value
+            .Should()
+            .BeOfType<ApiResponse<PagedResponse<CategoryDto>>>()
+            .Subject;
+        response.Success.Should().BeTrue();
+        response.Message.Should().Be("No categories found.");
+
+        response.Data.Should().NotBeNull();
+        response.Data!.Items.Should().HaveCount(0);
+        response.Data.Items.Should().BeEquivalentTo(categories);
+
+        response.Data.MetaData.Page.Should().Be(1);
+        response.Data.MetaData.PageSize.Should().Be(10);
+        response.Data.MetaData.TotalCount.Should().Be(0);
     }
 
     [Fact]

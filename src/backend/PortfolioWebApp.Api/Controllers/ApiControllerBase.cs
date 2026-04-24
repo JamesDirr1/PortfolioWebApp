@@ -13,9 +13,9 @@ public abstract class ApiControllerBase : ControllerBase
         return Ok(response);
     }
 
-    private ActionResult<ApiResponse<T>> Failure<T>(string message = "Request failed.", params List<string>? errors)
+    protected ActionResult<ApiResponse<T>> Failure<T>(string message = "Request failed.", params string[] errors)
     {
-        var response = ApiResponse<T>.FailureResponse(message, errors?.ToList());
+        var response = ApiResponse<T>.FailureResponse(message, errors);
         return BadRequest(response);
     }
 }

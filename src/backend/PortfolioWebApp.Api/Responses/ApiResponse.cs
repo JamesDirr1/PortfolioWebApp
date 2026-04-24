@@ -3,7 +3,7 @@
 public record ApiResponse<T>
 {
     public bool Success { get; init; }
-    public string? Message { get; init; } = string.Empty;
+    public string Message { get; init; } = string.Empty;
     public T? Data { get; init; }
     public List<string> Errors { get; init; } = [];
     
@@ -13,18 +13,19 @@ public record ApiResponse<T>
         {
             Success = true,
             Message = message,
-            Data = data
+            Data = data,
+            Errors = []
         };
     }
     
-    public static ApiResponse<T> FailureResponse(string message, List<string>? errors = null)
+    public static ApiResponse<T> FailureResponse(string message, IEnumerable<string>? errors = null)
     {
         return new ApiResponse<T>
         {
             Success = false,
             Message = message,
             Data = default,
-            Errors = errors ?? []
+            Errors = errors?.ToList() ?? []
         };
     }
 }

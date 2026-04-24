@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using PortfolioWebApp.Application.Validation;
 
 namespace PortfolioWebApp.Application.QueryParameters;
 
@@ -6,11 +7,11 @@ public sealed class CategoryQueryParameters
 {
     public string? Title { get; init; }
 
-    [AllowedValues("Id", "Title", "DisplayOrder",
+    [AllowedStringValues("Id", "Title", "DisplayOrder",
         ErrorMessage = "SortBy must be one of: Id, Title, DisplayOrder.")]
     public string? SortBy { get; init; } = "DisplayOrder";
 
-    [AllowedValues("asc", "desc",
+    [AllowedStringValues("asc", "desc",
         ErrorMessage = "SortDirection must be either 'asc' or 'desc'.")]
     public string? SortDirection { get; init; } = "asc";
 

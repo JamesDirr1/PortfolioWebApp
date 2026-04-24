@@ -3,7 +3,7 @@
 namespace PortfolioWebApp.Application.Validation;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
-public sealed class AllowedValuesAttribute(params string[] allowedValues) : ValidationAttribute
+public sealed class AllowedStringValuesAttribute(params string[] allowedValues) : ValidationAttribute
 {
     private readonly HashSet<string> _allowedValues =
         allowedValues.ToHashSet(StringComparer.OrdinalIgnoreCase);

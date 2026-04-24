@@ -12,32 +12,16 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
     public async Task<PagedResponse<CategoryDto>> GetAllAsync(CategoryQueryParameters query,
         CancellationToken cancellationToken = default)
     {
-        var filter = new CategoryFilter()
-        {
-            Title = string.IsNullOrWhiteSpace(query.Title)
-                ? null
-                : query.Title.Trim(),
-            SortBy = string.IsNullOrWhiteSpace(query.SortBy)
-                ? "DisplayOrder"
-                : query.SortBy.Trim(),
-            SortDirection = string.IsNullOrWhiteSpace(query.SortDirection)
-                ? "asc"
-                : query.SortDirection.Trim(),
-            Page = query.Page <= 0 ? 1 : query.Page,
-            PageSize = query.PageSize <= 0 ? 10 : Math.Min(query.PageSize, 100)
-        };
-        
+        var filter = CreateFilter(query);
         var pagedResult = await categoryRepository.GetAllAsync(filter, cancellationToken);
-
         var categoryDtos = pagedResult.Items.Select(category => new CategoryDto
         {
             Id = category.Id,
             Title = category.Title,
             Slug = category.Slug,
             DisplayOrder = category.DisplayOrder,
-            Description = category.Description,
+            Description = category.Description
         }).ToList();
-
         return PagedResponse<CategoryDto>.Create(categoryDtos, pagedResult.Page, pagedResult.PageSize,
             pagedResult.TotalCount);
     }
@@ -58,6 +42,24 @@ public class CategoryService(ICategoryRepository categoryRepository) : ICategory
             DisplayOrder = category.DisplayOrder,
             Description = category.Description,
             IsActive = category.IsActive
+        };
+    }
+
+    private CategoryFilter CreateFilter(CategoryQueryParameters query)
+    {
+        return new CategoryFilter
+        {
+            Title = string.IsNullOrWhiteSpace(query.Title)
+                ? null
+                : query.Title.Trim(),
+            SortBy = string.IsNullOrWhiteSpace(query.SortBy)
+                ? "DisplayOrder"
+                : query.SortBy.Trim(),
+            SortDirection = string.IsNullOrWhiteSpace(query.SortDirection)
+                ? "asc"
+                : query.SortDirection.Trim(),
+            Page = query.Page <= 0 ? 1 : query.Page,
+            PageSize = query.PageSize <= 0 ? 10 : Math.Min(query.PageSize, 100)
         };
     }
 }

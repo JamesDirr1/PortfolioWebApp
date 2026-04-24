@@ -8,7 +8,7 @@ public record PagedResponse<T>
     public static PagedResponse<T> Create(
         IReadOnlyList<T> items,
         int page,
-        int pageSize,
+        int pageSize,   
         int totalCount)
     {
         return new PagedResponse<T>

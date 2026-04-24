@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Moq;
 using PortfolioWebApp.Api.Middleware;
-using PortfolioWebApp.Api.Services;
 
 namespace PortfolioWebApp.Api.Tests.Middleware;
 
@@ -18,7 +17,7 @@ public class RequestContextLoggingMiddlewareTests
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Headers.RequestId = "RequestId1234";
 
-        RequestDelegate next = context => Task.CompletedTask;
+        RequestDelegate next = _ => Task.CompletedTask;
 
         var loggerMock = new Mock<ILogger<RequestContextLoggingMiddleware>>();
         var middleware = new RequestContextLoggingMiddleware(next, loggerMock.Object);
@@ -38,7 +37,7 @@ public class RequestContextLoggingMiddlewareTests
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Headers.RequestId = new[] { "first", "second" };
 
-        RequestDelegate next = context => Task.CompletedTask;
+        RequestDelegate next = _ => Task.CompletedTask;
 
         var loggerMock = new Mock<ILogger<RequestContextLoggingMiddleware>>();
         var middleware = new RequestContextLoggingMiddleware(next, loggerMock.Object);
@@ -58,7 +57,7 @@ public class RequestContextLoggingMiddlewareTests
         // Arrange
         var httpContext = new DefaultHttpContext();
 
-        RequestDelegate next = context => Task.CompletedTask;
+        RequestDelegate next = _ => Task.CompletedTask;
 
         var loggerMock = new Mock<ILogger<RequestContextLoggingMiddleware>>();
         var middleware = new RequestContextLoggingMiddleware(next, loggerMock.Object);
@@ -86,7 +85,7 @@ public class RequestContextLoggingMiddlewareTests
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Headers.RequestId = "";
 
-        RequestDelegate next = context => Task.CompletedTask;
+        RequestDelegate next = _ => Task.CompletedTask;
 
         var loggerMock = new Mock<ILogger<RequestContextLoggingMiddleware>>();
         var middleware = new RequestContextLoggingMiddleware(next, loggerMock.Object);
@@ -129,6 +128,76 @@ public class RequestContextLoggingMiddlewareTests
     }
 
     [Fact]
+    async Task InvokeAsync_LogErrorWhenStatus500()
+        // InvokeAsync but request returns a 500+ status
+        // Should be logging an error
+    {
+        // Arrange
+        var httpContext = new DefaultHttpContext
+        {
+            Response =
+            {
+                StatusCode = 500
+            }
+        };
+
+        RequestDelegate next = context =>
+        {
+            context.Response.StatusCode = 500;
+            return Task.CompletedTask;
+        };
+
+        var loggerMock = new Mock<ILogger<RequestContextLoggingMiddleware>>();
+        var middleware = new RequestContextLoggingMiddleware(next, loggerMock.Object);
+        // Act
+        await middleware.InvokeAsync(httpContext);
+        // Assert
+        loggerMock.Verify(
+            x => x.Log(
+                LogLevel.Error,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, _) => v.ToString()!.Contains("server error")),
+                It.IsAny<Exception>(),
+                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+            Times.Once);
+    }
+
+    [Fact]
+    async Task InvokeAsync_LogWarningWhenStatus400()
+        // InvokeAsync but request returns a 400+ status
+        // Should be logging a warning
+    {
+        // Arrange
+        var httpContext = new DefaultHttpContext
+        {
+            Response =
+            {
+                StatusCode = 400
+            }
+        };
+
+        RequestDelegate next = context =>
+        {
+            context.Response.StatusCode = 400;
+            return Task.CompletedTask;
+        };
+
+        var loggerMock = new Mock<ILogger<RequestContextLoggingMiddleware>>();
+        var middleware = new RequestContextLoggingMiddleware(next, loggerMock.Object);
+        // Act
+        await middleware.InvokeAsync(httpContext);
+        // Assert
+        loggerMock.Verify(
+            x => x.Log(
+                LogLevel.Warning,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((v, _) => v.ToString()!.Contains("client error")),
+                It.IsAny<Exception>(),
+                It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
+            Times.Once);
+    }
+
+    [Fact]
     public async Task InvokeAsync_CatchException()
         // InvokeAsync but catch exception 
         // Should catch exception and throw an error
@@ -136,7 +205,7 @@ public class RequestContextLoggingMiddlewareTests
         // Arrange
         var httpContext = new DefaultHttpContext();
 
-        RequestDelegate next = context => throw new InvalidOperationException("Error");
+        RequestDelegate next = _ => throw new InvalidOperationException("Error");
 
         var loggerMock = new Mock<ILogger<RequestContextLoggingMiddleware>>();
         var middleware = new RequestContextLoggingMiddleware(next, loggerMock.Object);
