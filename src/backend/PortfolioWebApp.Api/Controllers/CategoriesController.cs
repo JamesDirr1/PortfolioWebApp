@@ -45,23 +45,52 @@ public class CategoriesController(
     }
 
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetById(int id, CancellationToken cancellationToken)
+    [ProducesResponseType(typeof(ApiResponse<CategoryDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ApiResponse<CategoryDto>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<CategoryDto>), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<ApiResponse<CategoryDto>>> GetById(int id, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Getting category with id {id}", id);
+        logger.LogInformation("Getting category with Id={Id}", id);
+
+        if (id <= 0)
+        {
+            return Failure<CategoryDto>(
+                "Invalid category id.",
+                "Id must be greater than 0."
+            );
+        }
+
         var category = await categoryService.GetByIdAsync(id, cancellationToken);
 
         if (category is null)
         {
-            logger.LogWarning("Category with id {id} not found", id);
-            return NotFound(new { message = "Category not found" });
+            logger.LogWarning("Category with Id={Id} not found", id);
+            return FailureNotFound<CategoryDto>(
+                "Category not found.",
+                $"No Category exists with id {id}"
+            );
         }
 
-        logger.LogInformation("Returned category with id {id}", id);
+        logger.LogInformation("Returned category with Id={Id}", id);
         if (logger.IsEnabled(LogLevel.Debug))
         {
             logger.LogDebug("Category JSON: {CategoryJson:l}", JsonLogHelper.ToJson(category));
         }
 
-        return Ok(category);
+        return Success(category, "Category retrieved successfully.");
+    }
+
+    // Used to catch invalid id types (e.g. string) and return a 400 Bad Request with error message instead of 404 Not Found
+    [ProducesResponseType(typeof(ApiResponse<CategoryDto>), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
+    [HttpGet("{id}")]
+    public ActionResult<ApiResponse<CategoryDto>> GetByInvalidId(string id)
+    {
+        logger.LogWarning("Invalid category id format: {Id}", id);
+        return Failure<CategoryDto>(
+            "Invalid category id.",
+            $"'{id}' is not a valid category id. Id must be an integer greater than 0."
+        );
     }
 }

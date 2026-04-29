@@ -18,4 +18,10 @@ public abstract class ApiControllerBase : ControllerBase
         var response = ApiResponse<T>.FailureResponse(message, errors);
         return BadRequest(response);
     }
+    
+    protected ActionResult<ApiResponse<T>> FailureNotFound<T>(string message = "Resource not found.", params string[] errors)
+    {
+        var response = ApiResponse<T>.FailureResponse(message, errors);
+        return NotFound(response);
+    }
 }
