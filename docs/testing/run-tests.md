@@ -6,12 +6,20 @@
 
 This guide explains how to run the test suite locally.
 
-The project uses **xUnit** for testing and **Coverlet** for code coverage.
+The project uses:
+
+- **xUnit** for testing
+- **Moq** for mocking
+- **FluentAssertions** for assertions
+- **Coverlet** for code coverage
 
 ___
 
+
+
 ## Contents
 
+- [Prerequisites](#prerequisites) - Required tools and setup
 - [Quick Start](#quick-start) - Run tests using project scripts
 - [Manual Commands](#manual-commands) - Run tests using dotnet CLI
 - [Custom Scripts](#custom-scripts) - Details about test automation scripts
@@ -19,19 +27,26 @@ ___
 
 ---
 
+## Prerequisites
+
+Some infrastructure tests require **Docker**.
+
+The Infrastructure test project uses Testcontainers to automatically start a temporary PostgreSQL container during the test run.
+
+You do not need to manually run `docker compose up` before running tests.
+
+Required:
+
+- Docker installed
+- Docker Desktop running
+
+---
+
 ## Quick Start
 
-### Run Tests
+### Run Tests with Coverage (Recommended)
 
-Runs all tests using the project script:
-
-```powershell
-.\scripts\run-coverage.ps1
-```
-
-### Run Tests with Coverage
-
-Runs tests, generates coverage, and opens the report:
+Runs all tests, generates coverage, and opens the report:
 
 ```powershell
 .\scripts\run-coverage.ps1
@@ -56,7 +71,9 @@ This will:
 ### Run Tests for a Specific Project
 
 ```bash
-dotnet test tests/PortfolioWebApp.Tests
+dotnet test tests/PortfolioWebApp.Api.Tests
+dotnet test tests/PortfolioWebApp.Application.Tests
+dotnet test tests/PortfolioWebApp.Infrastructure.Tests
 ```
 
 ### Run Tests with Coverage
@@ -112,7 +129,6 @@ Runs all tests in the project.
 This script:
 
 - Executes all unit tests
-- Will be extended in the future to include additional test types (e.g., integration tests)
 
 ### Run Test with Coverage
 
