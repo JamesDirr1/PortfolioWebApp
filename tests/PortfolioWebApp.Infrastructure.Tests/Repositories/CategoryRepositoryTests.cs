@@ -97,10 +97,10 @@ public class CategoryRepositoryTests : IAsyncLifetime
             .Should()
             .Equal("Web Design", "Painting", "Illustration");
     }
-    
+
     [Fact]
     public async Task GetAllAsync_PaginatesResults()
-    // Should return the correct page of results based on the page number and page size specified in the filter
+        // Should return the correct page of results based on the page number and page size specified in the filter
     {
         // Arrange
         var filter = new CategoryFilter
@@ -120,6 +120,37 @@ public class CategoryRepositoryTests : IAsyncLifetime
         result.TotalCount.Should().Be(3);
     }
 
+    [Fact]
+    public async Task GetByIdAsync_ShouldReturnCategory()
+        // Should return Category of the matching ID when it exists
+    {
+        // Arrange 
+        var categoryId = 2;
+        // Act
+        var result = await _repository.GetByIdAsync(categoryId);
+        // Assert
+        result.Should().NotBeNull();
+        result.Should().BeOfType(typeof(Category));
+        result.Should().Match<Category>(category =>
+            category.Id == 2 &&
+            category.Title == "Painting" &&
+            category.Slug == "painting" &&
+            category.Description == "Painting work" &&
+            category.DisplayOrder == 2 &&
+            category.IsActive);
+    }
+
+    [Fact]
+    public async Task GetByIdAsync_ShouldReturnNull_WhenCategoryDoesNotExist()
+        // Should return Category of the matching ID when it exists
+    {
+        // Arrange 
+        var categoryId = 10;
+        // Act
+        var result = await _repository.GetByIdAsync(categoryId);
+        // Assert
+        result.Should().BeNull();
+    }
 
     private async Task SeedAsync()
     {

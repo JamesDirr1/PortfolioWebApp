@@ -139,14 +139,22 @@ public class CategoriesControllerTests
         //Act
         var result = await controller.GetById(1, CancellationToken.None);
         //Assert 
-        var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+        var okResult = result.Result.Should().BeOfType<OkObjectResult>().Subject;
         okResult.StatusCode.Should().Be(200);
-        okResult.Value.Should().BeEquivalentTo(category);
+        var response = okResult.Value
+            .Should()
+            .BeOfType<ApiResponse<CategoryDto>>()
+            .Subject;
+        response.Success.Should().BeTrue();
+        response.Message.Should().Be("Category retrieved successfully.");
+        response.Data.Should().NotBeNull();
+        response.Data.Should().BeEquivalentTo(category);
     }
+
 
     [Fact]
     public async Task GetById_ReturnsNotFound()
-        // Get Category by id not found
+        // Get Category by id but no category with matching id exists
         // Should return Not Found 
     {
         // Arrange
@@ -159,8 +167,72 @@ public class CategoriesControllerTests
         // Act
         var result = await controller.GetById(1, CancellationToken.None);
         // Assert
-        var notFound = result.Should().BeOfType<NotFoundObjectResult>().Subject;
+        var notFound = result.Result.Should().BeOfType<NotFoundObjectResult>().Subject;
         notFound.StatusCode.Should().Be(404);
-        notFound.Value.Should().BeEquivalentTo(new { message = "Category not found" });
+        var response = notFound.Value
+            .Should()
+            .BeOfType<ApiResponse<CategoryDto>>()
+            .Subject;
+        response.Success.Should().BeFalse();
+        response.Message.Should().Be("Category not found.");
+        response.Data.Should().BeNull();
+        response.Errors.Should().NotBeEmpty();
+        response.Errors.Should().ContainSingle()
+            .Which.Should().Be("No Category exists with id of 1.");
+    }
+
+    [Fact]
+    public async Task GetById_ReturnsError_InvalidID()
+        // Get Category by id but with invalid id
+        // Should return client error
+    {
+        // Arrange
+        var serviceMock = new Mock<ICategoryService>();
+        serviceMock
+            .Setup(x => x.GetByIdAsync(It.IsAny<int>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((CategoryDto?)null);
+        var loggerMock = new Mock<ILogger<CategoriesController>>();
+        var controller = new CategoriesController(serviceMock.Object, loggerMock.Object);
+        // Act
+        var result = await controller.GetById(0, CancellationToken.None);
+        // Assert
+        var badResult = result.Result.Should().BeOfType<BadRequestObjectResult>().Subject;
+        badResult.StatusCode.Should().Be(400);
+        var response = badResult.Value
+            .Should()
+            .BeOfType<ApiResponse<CategoryDto>>()
+            .Subject;
+        response.Success.Should().BeFalse();
+        response.Message.Should().Be("Invalid Category id.");
+        response.Data.Should().BeNull();
+        response.Errors.Should().NotBeEmpty();
+        response.Errors.Should().ContainSingle()
+            .Which.Should().Be("Id must be greater than 0.");
+    }
+
+    [Fact]
+    public void GetByInvalidId_ReturnsError_InvalidType()
+        // Get Category by id but with invalid id type (e.g. string instead of int)
+        // Should return client error
+    {
+        // Arrange
+        var serviceMock = new Mock<ICategoryService>();
+        var loggerMock = new Mock<ILogger<CategoriesController>>();
+        var controller = new CategoriesController(serviceMock.Object, loggerMock.Object);
+        // Act
+        var result = controller.GetByInvalidId("abc");
+        // Assert
+        var badResult = result.Result.Should().BeOfType<BadRequestObjectResult>().Subject;
+        badResult.StatusCode.Should().Be(400);
+        var response = badResult.Value
+            .Should()
+            .BeOfType<ApiResponse<CategoryDto>>()
+            .Subject;
+        response.Success.Should().BeFalse();
+        response.Message.Should().Be("Invalid Category id type.");
+        response.Data.Should().BeNull();
+        response.Errors.Should().NotBeEmpty();
+        response.Errors.Should().ContainSingle()
+            .Which.Should().Be("'abc' is not a valid Category id. Id must be an integer greater than 0.");
     }
 }

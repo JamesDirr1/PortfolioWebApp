@@ -56,7 +56,7 @@ public class CategoriesController(
         if (id <= 0)
         {
             return Failure<CategoryDto>(
-                "Invalid category id.",
+                "Invalid Category id.",
                 "Id must be greater than 0."
             );
         }
@@ -68,7 +68,7 @@ public class CategoriesController(
             logger.LogWarning("Category with Id={Id} not found", id);
             return FailureNotFound<CategoryDto>(
                 "Category not found.",
-                $"No Category exists with id {id}"
+                $"No Category exists with id of {id}."
             );
         }
 
@@ -87,10 +87,10 @@ public class CategoriesController(
     [HttpGet("{id}")]
     public ActionResult<ApiResponse<CategoryDto>> GetByInvalidId(string id)
     {
-        logger.LogWarning("Invalid category id format: {Id}", id);
+        logger.LogWarning("Invalid Category id format: {Id}", id);
         return Failure<CategoryDto>(
-            "Invalid category id.",
-            $"'{id}' is not a valid category id. Id must be an integer greater than 0."
+            "Invalid Category id type.",
+            $"'{id}' is not a valid Category id. Id must be an integer greater than 0."
         );
     }
 }

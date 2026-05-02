@@ -42,6 +42,7 @@ public class CategoryRepository(AppDbContext dbContext) : ICategoryRepository
     public async Task<Category?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
         return await dbContext.Categories
+            .AsNoTracking()
             .FirstOrDefaultAsync(category => category.Id == id,
                 cancellationToken);
     }

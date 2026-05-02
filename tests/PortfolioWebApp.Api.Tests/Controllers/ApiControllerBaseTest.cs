@@ -15,6 +15,10 @@ public class TestApiController : ApiControllerBase
     public ActionResult<ApiResponse<string>> FailureEndpoint(string message = "Request failed.",
         params string[] errors)
         => Failure<string>(message, errors);
+
+    public ActionResult<ApiResponse<string>> FailureNotFoundEndpoint(string message = "Resource not found.",
+        params string[] errors)
+        => FailureNotFound<string>(message, errors);
 }
 
 public class ApiControllerBaseTest
@@ -64,8 +68,8 @@ public class ApiControllerBaseTest
         // Act
         var result = controller.FailureEndpoint();
         // Assert
-        var okResult = result.Result.Should().BeOfType<BadRequestObjectResult>().Subject;
-        var response = okResult.Value.Should().BeOfType<ApiResponse<string>>().Subject;
+        var badResult = result.Result.Should().BeOfType<BadRequestObjectResult>().Subject;
+        var response = badResult.Value.Should().BeOfType<ApiResponse<string>>().Subject;
 
         response.Success.Should().BeFalse();
         response.Message.Should().Be("Request failed.");
@@ -84,8 +88,8 @@ public class ApiControllerBaseTest
         var result = controller.FailureEndpoint("Something went wrong",
             "Not a teapot", "Invalid input");
         // Assert
-        var okResult = result.Result.Should().BeOfType<BadRequestObjectResult>().Subject;
-        var response = okResult.Value.Should().BeOfType<ApiResponse<string>>().Subject;
+        var badResult = result.Result.Should().BeOfType<BadRequestObjectResult>().Subject;
+        var response = badResult.Value.Should().BeOfType<ApiResponse<string>>().Subject;
 
         response.Success.Should().BeFalse();
         response.Message.Should().Be("Something went wrong");
@@ -102,13 +106,50 @@ public class ApiControllerBaseTest
         // Act
         var result = controller.FailureEndpoint();
         // Assert
-        var okResult = result.Result.Should().BeOfType<BadRequestObjectResult>().Subject;
-        var response = okResult.Value.Should().BeOfType<ApiResponse<string>>().Subject;
+        var badResult = result.Result.Should().BeOfType<BadRequestObjectResult>().Subject;
+        var response = badResult.Value.Should().BeOfType<ApiResponse<string>>().Subject;
 
         response.Success.Should().BeFalse();
         response.Message.Should().Be("Request failed.");
         response.Data.Should().BeNull();
         response.Errors.Should().NotBeNull();
         response.Errors.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void FailureNotFound_ShouldReturnNotFound()
+        // Should return a Not Found response
+    {
+        // Arrange
+        var controller = new TestApiController();
+        // Act
+        var result = controller.FailureNotFoundEndpoint();
+        // Assert
+        var badResult = result.Result.Should().BeOfType<NotFoundObjectResult>().Subject;
+        var response = badResult.Value.Should().BeOfType<ApiResponse<string>>().Subject;
+
+        response.Success.Should().BeFalse();
+        response.Message.Should().Be("Resource not found.");
+        response.Data.Should().BeNull();
+        response.Errors.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void FailureNotFound_ShouldUseCustomMessageAndErrors()
+        // Should return a Not Found response with custom message and errors
+    {
+        // Arrange
+        var controller = new TestApiController();
+        // Act
+        var result = controller.FailureNotFoundEndpoint("Category not found",
+            "Error 1", "Error 2", "Error 3");
+        // Assert
+        var badResult = result.Result.Should().BeOfType<NotFoundObjectResult>().Subject;
+        var response = badResult.Value.Should().BeOfType<ApiResponse<string>>().Subject;
+
+        response.Success.Should().BeFalse();
+        response.Message.Should().Be("Category not found");
+        response.Data.Should().BeNull();
+        response.Errors.Should().BeEquivalentTo("Error 1", "Error 2", "Error 3");
     }
 }
