@@ -1,4 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
+using PortfolioWebApp.Api.Responses;
 using PortfolioWebApp.Api.Logging;
 using PortfolioWebApp.Application.Interfaces.Categories;
 using PortfolioWebApp.Application.Services.Categories;
@@ -34,7 +37,30 @@ try
             );
     });
 
-    builder.Services.AddControllers();
+    builder.Services
+        .AddControllers()
+        .ConfigureApiBehaviorOptions(options =>
+        {
+            options.InvalidModelStateResponseFactory = context =>
+            {
+                var errors = context.ModelState
+                    .Where(x => x.Value is not null && x.Value.Errors.Count > 0)
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value!.Errors
+                            .Select(e => string.IsNullOrWhiteSpace(e.ErrorMessage)
+                                ? "Validation error."
+                                : e.ErrorMessage)
+                            .ToArray());
+                Log.Warning("Validation failed. Errors: {@ValidationErrors}", errors);
+                var response = ApiValidationResponse.Failure(
+                    "Validation failed.",
+                    errors);
+
+                return new BadRequestObjectResult(response);
+            };
+        });
+
     builder.Services.AddEndpointsApiExplorer();
     builder.Services.AddSwaggerGen();
 
@@ -49,6 +75,32 @@ try
 
     var app = builder.Build();
     app.Logger.LogInformation("Environment is {EnvironmentName}", app.Environment.EnvironmentName);
+
+    app.UseExceptionHandler(errorApp =>
+    {
+        errorApp.Run(async context =>
+        {
+            var exceptionFeature = context.Features.Get<IExceptionHandlerFeature>();
+
+            var logger = context.RequestServices
+                .GetRequiredService<ILoggerFactory>()
+                .CreateLogger("GlobalExceptionHandler");
+
+            if (exceptionFeature?.Error is not null)
+            {
+                logger.LogError(exceptionFeature.Error, "Unhandled exception occurred.");
+            }
+
+            context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+            context.Response.ContentType = "application/json";
+
+            var response = ApiResponse<object>.FailureResponse(
+                "An unexpected error occurred.",
+                ["Please try again later."]);
+
+            await context.Response.WriteAsJsonAsync(response);
+        });
+    });
 
     if (app.Environment.IsDevelopment())
     {

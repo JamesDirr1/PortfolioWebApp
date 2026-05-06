@@ -30,10 +30,12 @@ public sealed class RequestContextLoggingMiddleware(
 
         var stopwatch = Stopwatch.StartNew();
 
+        var path = context.Request.Path.ToString() + context.Request.QueryString.ToString();
+
         //Push request info to log context
         using (LogContext.PushProperty("Request-Id", requestId))
         using (LogContext.PushProperty("Method", context.Request.Method))
-        using (LogContext.PushProperty("Path", context.Request.Path.ToString()))
+        using (LogContext.PushProperty("Path", path))
         using (LogContext.PushProperty("LogType", "RequestStart"))
         {
             logger.LogInformation("Received request"); //Log for every request received 
@@ -42,11 +44,25 @@ public sealed class RequestContextLoggingMiddleware(
                 await next(context);
                 stopwatch.Stop();
                 //Push Response info to log context
+                var statusCode = context.Response.StatusCode;
                 using (LogContext.PushProperty("ElapsedMilliseconds", stopwatch.ElapsedMilliseconds))
-                using (LogContext.PushProperty("StatusCode", context.Response.StatusCode))
+                using (LogContext.PushProperty("StatusCode", statusCode))
                 using (LogContext.PushProperty("LogType", "RequestCompleted"))
                 {
-                    logger.LogInformation("HTTP request completed"); //Log for each completed request
+                    switch (statusCode)
+                    {
+                        case >= 500:
+                            logger.LogError("HTTP request completed with server error status code {StatusCode}",
+                                statusCode); //Log for server errors
+                            break;
+                        case >= 400:
+                            logger.LogWarning("HTTP request completed with client error status code {StatusCode}",
+                                statusCode); //Log for client errors
+                            break;
+                        default:
+                            logger.LogInformation("HTTP request completed"); //Log for each completed request
+                            break;
+                    }
                 }
             }
             catch (Exception ex)

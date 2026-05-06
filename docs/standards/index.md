@@ -94,7 +94,7 @@ Before opening a pull request:
 
 ---
 
-Development Workflow
+## Development Workflow
 
 Typical workflow:
 

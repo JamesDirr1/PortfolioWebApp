@@ -152,7 +152,7 @@ public class LogEventPropertyReaderTests
     }
 
     [Fact]
-    public void GetRequestData()
+    public void GetRequestData_Success()
         // Generates a new RequestLogData object from Serilog event 
         // Should return a RequestLogData
     {

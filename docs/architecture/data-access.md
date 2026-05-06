@@ -35,6 +35,70 @@ It is defined in the Infrastructure layer and registered using dependency inject
 
 ---
 
+## Repository Pattern
+
+The application uses a repository pattern to abstract data access logic.
+
+**Responsibilities:**
+
+- Encapsulate EF Core queries
+- Apply filtering, sorting, and pagination
+- Return domain-level results (`PagedResult<T>`)
+
+Example responsibilities in CategoryRepository:
+
+- Filtering using `Title`
+- Sorting by `Id`, `Title`, or `DisplayOrder`
+- Pagination using `Page` and `PageSize`
+
+**Benefits:**
+
+- Keeps data access logic isolated from business logic
+- Improves testability
+- Allows the Application layer to remain database-agnostic
+
+---
+
+## Query Behavior
+
+### Filtering
+
+Filtering is performed using EF Core expressions:
+
+- Case-insensitive matching is implemented using `EF.Functions.ILike`
+- Empty or whitespace values are ignored
+
+### Sorting
+
+Sorting is dynamically applied based on query parameters:
+
+- Supported fields are defined in `QueryParameters`
+- Direction: ascending or descending
+
+### Pagination
+
+Pagination is implemented using:
+
+```csharp
+query.Skip((page - 1) * pageSize).Take(pageSize);
+```
+
+The repository also calculates the total count to support pagination metadata.
+
+---
+
+## Performance Considerations
+
+To optimize read operations:
+
+- `AsNoTracking()` is used for queries that do not modify entities
+- Only required data is selected and mapped
+- Pagination limits the number of records returned
+
+These practices help reduce memory usage and improve query performance.
+
+---
+
 ## Migrations
 
 Database schema changes are managed using EF Core migrations.

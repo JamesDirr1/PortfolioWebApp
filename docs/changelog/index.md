@@ -10,8 +10,8 @@ This document tracks notable changes to the project across versions, including n
 
 ## Contents
 
+- [Version 0.2.0](version-0.2.0.md) - Categories API refactor, pagination, validation, testing, and logging improvements
 - [Version 0.1.0](version-0.1.0.md) - Initial release and project setup
-
 
 ---
 

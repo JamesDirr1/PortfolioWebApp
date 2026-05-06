@@ -24,40 +24,51 @@ src/backend/
 
 ## API Layer `PortfolioWebApp.Api`
 
-Responsible for handling HTTP requests and responses.
+Responsible for handling HTTP requests, responses, and cross-cutting concerns.
 
 ### Key responsibilities:
 
-- Controllers
-- Routing
-- Request/response formatting
-- Middleware (e.g., request tracing via X-Request-Id)
+- Controllers (entry point for HTTP requests)
+- Routing and endpoint definitions
+- Standardized API responses (ApiResponse<T>, ApiValidationResponse)
+- Middleware (request tracing, logging, error handling)
+- Model validation handling and error formatting
 - Application configuration (Program.cs, appsettings.json)
 
 ---
 
 ## Application Layer `PortfolioWebApp.Application`
 
-Contains business logic and application services.
+Contains business logic, orchestration, and application-level abstractions.
 
 ### Key responsibilities:
 
-- Services (business logic)
+- Services (e.g., CategoryService)
 - DTOs (Data Transfer Objects)
-- Interfaces (abstractions for infrastructure)
-- Validation logic
+- Query parameter models (e.g., CategoryQueryParameters)
+- Pagination models (PagedResponse<T>, PagedMetaData)
+- Validation attributes and rules (e.g., AllowedValuesAttribute)
+- Interfaces for repositories and services
+
+### Notes
+
+Responsible for mapping:
+
+Domain → DTOs
+Repository results → API-friendly responses
 
 ---
 
 ## Domain Layer `PortfolioWebApp.Domain`
 
-Represents the core business model of the application.
+Represents the core business model and rules.
 
 ### Key responsibilities:
 
 - Entities (e.g., Category, Project)
-- Domain rules
-- Core abstractions
+- Domain queries/filters (e.g., CategoryFilter)
+- Core abstractions (e.g., repository interfaces)
+- Domain-level pagination results (PagedResult<T>)
 
 This layer contains no external dependencies and represents the “source of truth” for business concepts.
 
@@ -65,12 +76,13 @@ This layer contains no external dependencies and represents the “source of tru
 
 ## Infrastructure Layer `PortfolioWebApp.Infrastructure`
 
-Handles external systems and persistence.
+Handles external systems such as the database and persistence logic.
 
-Key responsibilities:
+### Key responsibilities:
 
 - Entity Framework Core DbContext
-- Repository implementations
+- Repository implementations (e.g., CategoryRepository)
+- Query execution (filtering, sorting, pagination)
 - Database migrations
 - PostgreSQL integration
 

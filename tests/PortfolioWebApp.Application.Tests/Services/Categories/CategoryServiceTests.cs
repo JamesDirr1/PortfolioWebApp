@@ -1,9 +1,12 @@
 ﻿using FluentAssertions;
 using Moq;
 using PortfolioWebApp.Application.DTOs.Categories;
+using PortfolioWebApp.Application.QueryParameters;
 using PortfolioWebApp.Application.Services.Categories;
+using PortfolioWebApp.Domain.Common;
 using PortfolioWebApp.Domain.Entities;
 using PortfolioWebApp.Domain.Interfaces;
+using PortfolioWebApp.Domain.Queries;
 
 namespace PortfolioWebApp.Application.Tests.Services.Categories;
 
@@ -11,7 +14,6 @@ public class CategoryServiceTests
 {
     [Fact]
     public async Task GetAllCategories()
-        // Get All Categories Successful
         // Should return a list of mapped CategoryDtos
     {
         // Arrange
@@ -36,41 +38,124 @@ public class CategoryServiceTests
                 Slug = "test-category-2"
             }
         };
+        var pagedResult = PagedResult<Category>.Create(
+            categories,
+            page: 1,
+            pageSize: 10,
+            totalCount: 2);
         var repoMock = new Mock<ICategoryRepository>();
         repoMock
-            .Setup(x => x.GetAllAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(categories);
+            .Setup(x => x.GetAllAsync(It.IsAny<CategoryFilter>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(pagedResult);
         var categoryService = new CategoryService(repoMock.Object);
+        var query = new CategoryQueryParameters
+        {
+            Page = 1,
+            PageSize = 10,
+            SortBy = "DisplayOrder",
+            SortDirection = "asc"
+        };
         // Act
-        var results = await categoryService.GetAllAsync();
+        var result = await categoryService.GetAllAsync(query);
         // Assert
-        results.Should().HaveCount(2);
-        results[0].Id.Should().Be(1);
-        results[0].Title.Should().Be("Test Category 1");
-        results[0].Description.Should().Be("Some cool description");
-        results[0].DisplayOrder.Should().Be(1);
-        results[0].IsActive.Should().Be(true);
-        results[0].Slug.Should().Be("test-category-1");
+        result.Should().NotBeNull();
+        result.Items.Should().HaveCount(2);
 
-        repoMock.Verify(x => x.GetAllAsync(It.IsAny<CancellationToken>()), Times.Once);
+        result.Items[0].Id.Should().Be(1);
+        result.Items[0].Title.Should().Be("Test Category 1");
+        result.Items[0].Description.Should().Be("Some cool description");
+        result.Items[0].DisplayOrder.Should().Be(1);
+        result.Items[0].IsActive.Should().Be(true);
+        result.Items[0].Slug.Should().Be("test-category-1");
+
+        result.MetaData.Page.Should().Be(1);
+        result.MetaData.PageSize.Should().Be(10);
+        result.MetaData.TotalCount.Should().Be(2);
+        result.MetaData.TotalPages.Should().Be(1);
+
+        repoMock.Verify(
+            x => x.GetAllAsync(
+                It.Is<CategoryFilter>(f =>
+                    f.Page == 1 &&
+                    f.PageSize == 10 &&
+                    f.SortBy == "DisplayOrder" &&
+                    f.SortDirection == "asc"),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
     [Fact]
     public async Task GetAllCategories_EmptyList()
-        // Get all but no categories exist 
         // Should return an empty list
     {
         // Arrange
         var categories = new List<Category>();
+        var pagedResult = PagedResult<Category>.Create(
+            categories,
+            page: 1,
+            pageSize: 10,
+            totalCount: 0);
         var repoMock = new Mock<ICategoryRepository>();
         repoMock
-            .Setup(x => x.GetAllAsync(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(categories);
+            .Setup(x => x.GetAllAsync(It.IsAny<CategoryFilter>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(pagedResult);
         var categoryService = new CategoryService(repoMock.Object);
+        var query = new CategoryQueryParameters
+        {
+            Page = 1,
+            PageSize = 10,
+            SortBy = "DisplayOrder",
+            SortDirection = "asc"
+        };
         // Act
-        var results = await categoryService.GetAllAsync();
+        var result = await categoryService.GetAllAsync(query);
         // Assert
-        results.Should().BeEmpty();
+        result.Should().NotBeNull();
+        result.Items.Should().HaveCount(0);
+
+        result.MetaData.Page.Should().Be(1);
+        result.MetaData.PageSize.Should().Be(10);
+        result.MetaData.TotalCount.Should().Be(0);
+        result.MetaData.TotalPages.Should().Be(0);
+    }
+
+    [Fact]
+    public async Task GetAllCategories_NormalizedQuery()
+        // Should Normalize query parameters and pass them to repository
+    {
+        // Arrange
+        var categories = new List<Category>();
+        var pagedResult = PagedResult<Category>.Create(
+            categories,
+            page: 1,
+            pageSize: 10,
+            totalCount: 0);
+        var repoMock = new Mock<ICategoryRepository>();
+        repoMock
+            .Setup(x => x.GetAllAsync(It.IsAny<CategoryFilter>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(pagedResult);
+        var categoryService = new CategoryService(repoMock.Object);
+        var query = new CategoryQueryParameters
+        {
+            Page = 0,
+            PageSize = 500,
+            Title = "  ART    ",
+            SortBy = " ",
+            SortDirection = "  desc "
+        };
+        // Act
+        await categoryService.GetAllAsync(query);
+        // Assert
+        repoMock.Verify(
+            x => x.GetAllAsync(
+                It.Is<CategoryFilter>(f =>
+                    f.Page == 1 &&
+                    f.PageSize == 100 &&
+                    f.Title == "ART" &&
+                    f.SortBy == "DisplayOrder" &&
+                    f.SortDirection == "desc"),
+                It.IsAny<CancellationToken>()),
+            Times.Once);
     }
 
 

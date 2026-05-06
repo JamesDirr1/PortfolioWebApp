@@ -1,36 +1,34 @@
 ﻿using PortfolioWebApp.Application.DTOs.Categories;
 using PortfolioWebApp.Application.Interfaces.Categories;
+using PortfolioWebApp.Application.Common;
+using PortfolioWebApp.Application.QueryParameters;
 using PortfolioWebApp.Domain.Interfaces;
+using PortfolioWebApp.Domain.Queries;
 
 namespace PortfolioWebApp.Application.Services.Categories;
 
-public class CategoryService : ICategoryService
+public class CategoryService(ICategoryRepository categoryRepository) : ICategoryService
 {
-    private readonly ICategoryRepository _categoryRepository;
-
-    public CategoryService(ICategoryRepository categoryRepository)
+    public async Task<PagedResponse<CategoryDto>> GetAllAsync(CategoryQueryParameters query,
+        CancellationToken cancellationToken = default)
     {
-        _categoryRepository = categoryRepository;
-    }
-
-    public async Task<List<CategoryDto>> GetAllAsync(CancellationToken cancellationToken = default)
-    {
-        var categories = await _categoryRepository.GetAllAsync(cancellationToken);
-
-        return categories.Select(category => new CategoryDto
+        var filter = CreateFilter(query);
+        var pagedResult = await categoryRepository.GetAllAsync(filter, cancellationToken);
+        var categoryDtos = pagedResult.Items.Select(category => new CategoryDto
         {
             Id = category.Id,
             Title = category.Title,
             Slug = category.Slug,
             DisplayOrder = category.DisplayOrder,
-            Description = category.Description,
-            IsActive = category.IsActive
+            Description = category.Description
         }).ToList();
+        return PagedResponse<CategoryDto>.Create(categoryDtos, pagedResult.Page, pagedResult.PageSize,
+            pagedResult.TotalCount);
     }
 
     public async Task<CategoryDto?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        var category = await _categoryRepository.GetByIdAsync(id, cancellationToken);
+        var category = await categoryRepository.GetByIdAsync(id, cancellationToken);
         if (category is null)
         {
             return null;
@@ -44,6 +42,24 @@ public class CategoryService : ICategoryService
             DisplayOrder = category.DisplayOrder,
             Description = category.Description,
             IsActive = category.IsActive
+        };
+    }
+
+    private CategoryFilter CreateFilter(CategoryQueryParameters query)
+    {
+        return new CategoryFilter
+        {
+            Title = string.IsNullOrWhiteSpace(query.Title)
+                ? null
+                : query.Title.Trim(),
+            SortBy = string.IsNullOrWhiteSpace(query.SortBy)
+                ? "DisplayOrder"
+                : query.SortBy.Trim(),
+            SortDirection = string.IsNullOrWhiteSpace(query.SortDirection)
+                ? "asc"
+                : query.SortDirection.Trim(),
+            Page = query.Page <= 0 ? 1 : query.Page,
+            PageSize = query.PageSize <= 0 ? 10 : Math.Min(query.PageSize, 100)
         };
     }
 }

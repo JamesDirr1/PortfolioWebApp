@@ -6,7 +6,10 @@
 
 The project focuses on testing core application logic to ensure correctness and maintainability.
 
-The project uses xUnit for unit testing and Coverlet for code coverage.
+- **xUnit** for unit testing
+- **Moq** for mocking dependencies
+- **FluentAssertions** for expressive assertions
+- **Coverlet** for code coverage
 
 This approach keeps tests focused, fast, and maintainable.
 
@@ -23,14 +26,18 @@ This approach keeps tests focused, fast, and maintainable.
 
 ## Current Scope
 
-- Unit tests for application services
-- Validation of business logic
-- Testing of edge cases and failure scenarios
+The project includes unit tests across multiple layers:
+
+- API layer (controllers, response handling)
+- Application layer (services, mapping, orchestration)
+- Domain logic (filters, rules)
+- Validation (attributes and query parameters)
+- Middleware (request tracing and logging)
+- Infrastructure layer (repository behavior)
 
 ### Not Covered (Yet)
 
-- Integration test
-- End-to-end tests
+- Full End-to-end tests
 
 ---
 
@@ -47,14 +54,45 @@ This approach keeps tests focused, fast, and maintainable.
 
 The following areas are covered by tests:
 
-- Application services
-- Domain logic
-- Validation rules
-- Custom request tracing and logging
+### API Layer
 
-The following are not directly tested
+- Controller responses and status codes
+- Standardized response formatting (`ApiResponse<T>`)
+- Validation responses (`ApiValidationResponse`)
 
-- Framework behavior (ASP.NET routing, EF Core internals)
+### Application Layer
+
+- Service logic and orchestration
+- Mapping between domain entities and DTOs
+- Pagination mapping (`PagedResult → PagedResponse`)
+
+### Domain Layer
+
+- Domain filters and query logic
+- Core business rules
+
+### Validation
+
+- Custom validation attributes (e.g., `AllowedValuesAttribute`)
+- Query parameter validation
+
+### Middleware
+
+- Request logging behavior
+- Request tracing and correlation (`Request-Id`)
+
+### Infrastructure
+
+- Repository query behavior (filtering, sorting, pagination)
+
+---
+
+## What is Not Tested
+
+The following are intentionally not tested:
+
+- ASP.NET Core framework behavior (routing, model binding)
+- EF Core internals
 - Simple data models without logic
 
 ---
@@ -68,6 +106,7 @@ This ensures:
 
 - New changes do not break existing functionality
 - Code remains stable over time
+- Test coverage is maintained across the project
 
 ---
 
