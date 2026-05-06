@@ -33,6 +33,39 @@ Endpoints that accept request bodies also expect **JSON**.
 
 > Content-Type: application/json
 
+### JSON Naming Convention
+
+The API uses **camelCase** for all JSON property names in requests and responses.
+
+Example:
+
+```json
+{
+  "displayOrder": 1,
+  "isActive": true
+}
+```
+
+### Standard Response Envelopes
+
+All endpoints return a standardized response structure.
+
+- Successful and general API responses use `ApiResponse<T>`
+- Validation failures use `ApiValidationResponse`
+
+### Pagination
+
+Paginated endpoints return pagination metadata inside the `data.metaData` object.
+
+```json
+{
+  "data": {
+    "items": [],
+    "metaData": {}
+  }
+}
+```
+
 ---
 
 ## Request Tracing
@@ -59,7 +92,7 @@ If a `Request-Id` is not provided, the server generates one and returns it in th
 
 ## Standard API Response Format
 
-Most Successful API response use a standard response envelope.
+Most successful API responses use a standard response envelope.
 
 ```json
 {
@@ -221,7 +254,7 @@ Endpoint-specific filters are documented on each resource page.
 | `200 OK`                    | Success          | Request completed successfully.                 |
 | `400 Bad Request`           | Validation Error | Query string, route, or body validation failed. |
 | `404 Not Found`             | Missing Resource | Requested resource could not be found.          |
-| `500 Internal Server Error` | Server Error     | An unexpected server error occurr               |
+| `500 Internal Server Error` | Server Error     | An unexpected server error occurred.            |
 
 ---
 

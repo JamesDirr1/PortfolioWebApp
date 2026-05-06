@@ -135,10 +135,10 @@ The response is wrapped in the standard API response envelope.
 
 The `data` field contains a paginated response:
 
-| Field      | Type   | Description                    |
-|------------|--------|--------------------------------|
-| `items`    | array  | List of Category objects       |
-| `metaData` | object | Pagination metadata            |
+| Field      | Type   | Description              |
+|------------|--------|--------------------------|
+| `items`    | array  | List of Category objects |
+| `metaData` | object | Pagination metadata      |
 
 #### Possible Status Codes
 
@@ -245,12 +245,48 @@ Retrieves a specific category by its unique identifier.
 ### Request
 
 - **Method:** `GET`
-- **URL:** `/api/categories/{id: integer}`
+- **URL:** `/api/categories/{id}`
 - **Authentication:** Not required
-- **Path Parameters:** {id: integer}
+- **Path Parameters:** `{id: integer}`
 - **Request Body:** None
 
+#### Path Parameters
+
+| Parameter | Type    | Required | Description                                  |
+|-----------|---------|----------|----------------------------------------------|
+| `id`      | integer | Yes      | Unique identifier of the requested category. |
+
+### Example Requests
+
+#### HTTP
+
+```http request
+GET /api/categories/1 HTTP/1.1
+Host: localhost:5018
+Request-Id: 47ff3631-c08c-4a47-9dc3-32dd628d4a49
+```
+
+#### CURL
+
+```curl
+curl -X GET "http://localhost:5018/api/categories/1" \
+  -H "Request-Id: 47ff3631-c08c-4a47-9dc3-32dd628d4a49"
+```
+
+#### REST METHOD
+
+```powershell
+$headers = New-Object "System.Collections.Generic.Dictionary[[String],[String]]"
+$headers.Add("Request-Id", "47ff3631-c08c-4a47-9dc3-32dd628d4a49")
+$response = Invoke-RestMethod 'http://localhost:5018/api/categories/1' -Method 'GET' -Headers $headers
+$response | ConvertTo-Json
+```
+
 ### Response
+
+Returns a single [Category](#category) object.
+
+The response is wrapped in the standard API response envelope.
 
 #### Headers
 
@@ -258,35 +294,18 @@ Retrieves a specific category by its unique identifier.
 - **Content-Type:** application/json
 - **Request-Id:** Echoes the `Request-Id` from the request or a generated one if not provided.
 
-#### Body
-
-Returns a single [Category](#category) object with the specified `id`.
-
-If no category with the given `id` exists, a `404 Not Found` status will be returned.
-
 #### Possible Status Codes
 
-| Status Code               | Description                                    |
-|---------------------------|------------------------------------------------|
-| 200 OK                    | Request was successful                         |
-| 404 Not Found             | Indicates that request category does not exist |
-| 500 Internal Server Error | Something went wrong on the servers end        |
+| Status Code               | Description                                          |
+|---------------------------|------------------------------------------------------|
+| 200 OK                    | Request was successful                               |
+| 400 Bad Request           | Indicates an invalid category id                     |
+| 404 Not Found             | Indicates that the requested category does not exist |
+| 500 Internal Server Error | Something went wrong on the server                   |
 
-### Example Requests
+### Example Responses
 
-#### Successful
-
-Example of a successful request
-
-##### Request
-
-```http 
-GET /api/categories/1 HTTP/1.1
-Host: example.com
-Request-Id: 47ff3631-c08c-4a47-9dc3-32dd628d4a49
-```
-
-##### Response
+#### Successful `200 OK`
 
 ```http 
 HTTP/1.1 200 OK
@@ -296,28 +315,44 @@ Request-Id: 47ff3631-c08c-4a47-9dc3-32dd628d4a49
 
 ```json
 {
-  "id": 1,
-  "title": "Comics",
-  "slug": "comics",
-  "displayOrder": 1,
-  "description": "Comic illustration and sequential art projects",
-  "isActive": true
+  "success": true,
+  "message": "Category retrieved successfully.",
+  "data": {
+    "id": 1,
+    "title": "Comics",
+    "slug": "comics",
+    "displayOrder": 1,
+    "description": "Comic illustration and sequential art projects",
+    "isActive": true
+  },
+  "errors": []
 }
 ```
 
-#### Not Found
-
-Example of a request with an invalid id.
-
-##### Request
+#### Invalid ID `400 Bad Request`
 
 ```http 
-GET /api/categories/-1 HTTP/1.1
-Host: example.com
+HTTP/1.1 400 Bad Request
+Content-Type: application/json
 Request-Id: 47ff3631-c08c-4a47-9dc3-32dd628d4a49
 ```
 
-##### Response
+```json
+{
+  "success": false,
+  "message": "Invalid category id.",
+  "data": null,
+  "errors": [
+    "'abc' is not a valid category id. Id must be an integer greater than 0."
+  ]
+}
+```
+
+#### Invalid ID `404 Not Found`
+
+Example of a request for a category that does not exist.
+
+##### Request
 
 ```http 
 HTTP/1.1 404 Not Found
@@ -327,7 +362,12 @@ Request-Id: 47ff3631-c08c-4a47-9dc3-32dd628d4a49
 
 ```json
 {
-  "message": "Category not found"
+  "success": false,
+  "message": "Category not found.",
+  "data": null,
+  "errors": [
+    "No category exists with id 999."
+  ]
 }
 ```
 

@@ -4,14 +4,15 @@
 
 ---
 
-Expanded the Categories API with filtering, sorting, pagination, validation, improved logging, and comprehensive testing
-across all layers.
+Expanded the Categories API with filtering, sorting, pagination, validation, standardized API responses, improved
+logging, and comprehensive testing across all layers.
 
 ---
 
 ## Added
 
 ### Core Application
+
 - Enhanced Categories endpoint with:
     - Filtering by title
     - Sorting (`Id`, `Title`, `DisplayOrder`)
@@ -26,7 +27,14 @@ across all layers.
 
 - Standardized response envelope (`ApiResponse<T>`)
 - Validation response model (`ApiValidationResponse`)
+- Consistent API response formatting across endpoints
+- Standardized `404 Not Found` API responses
+- Invalid route parameter handling for category IDs
 - Query parameter validation using `AllowedValuesAttribute`
+- Controller response helper methods:
+    - `Success<T>()`
+    - `Failure<T>()`
+    - `FailureNotFound<T>()`
 
 ### Testing
 
@@ -50,7 +58,13 @@ across all layers.
 
 ### Documentation
 
-- Updated API documentation with request/response examples
+- Updated API documentation with:
+    - Request/response examples
+    - Standard response envelope documentation
+    - Validation response documentation
+    - Pagination metadata documentation
+    - API conventions and standards
+    - Invalid ID and error response examples
 - Added architecture diagrams (flow + sequence)
 - Expanded documentation for:
     - Request flow
