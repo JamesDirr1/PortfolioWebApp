@@ -82,6 +82,7 @@ public class CategoriesController(
     }
 
     // Used to catch invalid id types (e.g. string) and return a 400 Bad Request with error message instead of 404 Not Found
+    [ApiExplorerSettings(IgnoreApi = true)]
     [ProducesResponseType(typeof(ApiResponse<CategoryDto>), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ApiResponse<object>), StatusCodes.Status500InternalServerError)]
     [HttpGet("{id}")]
